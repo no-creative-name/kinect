@@ -58,20 +58,21 @@ public class GraphicSkeleton extends JPanel {
     @Override
     public void paint (Graphics g) {
        
-        super.paint(g);
-       
-        for (GraphicJoint joint : joints) {
-            joint.setGraphics(g);
-            //if(Rules.isRightHandAboveHead(joints.get(11).y, joints.get(3).y)) {
-                joint.render(Color.blue);
-            //}
-            //else {
-            //    joint.render(Color.red);
-            //}
+        if (KinectAdapter.skeletonDataAvailable) {
+            super.paint(g);
+
+            for (GraphicJoint joint : joints) {
+                if (joint.hasMoved) {
+                    joint.setGraphics(g);
+                    joint.render(Color.blue);
+                }
+                else {
+                    
+                }
+            }
         }
         
-       
-        
+        KinectAdapter.skeletonDataAvailable = false;
     }
     
     public void update (Skeleton skeleton) {

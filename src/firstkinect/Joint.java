@@ -9,6 +9,7 @@ public class Joint {
     public double x;
     public double y;
     public double z;
+    public boolean hasMoved;
     
     public Joint (int id, double x, double y, double z) {
         
@@ -17,10 +18,33 @@ public class Joint {
         this.x = x;
         this.y = -y;
         this.z = z;
-        
-        System.out.println(this.x);
        
         
     }
+    
+    public void update (double x, double y, double z) {
+        
+        if (x==this.x &&
+            y==this.y &&
+            z==this.z 
+            )
+        {
+            this.hasMoved = false;
+            System.out.println("Has not moved");
+        }
+        else
+        {
+            this.hasMoved = true;
+        }
+        
+        
+        
+        this.x = x;
+        this.y = -y;
+        this.z = z;
+       
+       
+    }
+    
     
 }

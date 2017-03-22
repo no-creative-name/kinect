@@ -5,9 +5,9 @@ package firstkinect;
 public class Rules {
     
     
-    public static boolean isLeftHandAboveHead (double[][] coordinates) {
+    public static boolean isLeftHandAboveHead (int leftHandCoordinate, int headCoordinate) {
         
-        if (coordinates[3][1] < coordinates[7][1]) {
+        if (headCoordinate < leftHandCoordinate) {
             return true;
         }
         

@@ -14,8 +14,8 @@ public class KinectAdapter extends J4KSDK{
     double[][][] coordinates;
     double[][][] emptyCoordinates;
     public boolean[] whichSkeletonsTracked;
+    public static boolean skeletonDataAvailable = false;
     public int skeletonCount;
-    public volatile boolean skeletonDataAvailable;
     //List<Skeleton> existingSkeletons;
     
     public KinectAdapter () {
@@ -34,7 +34,6 @@ public class KinectAdapter extends J4KSDK{
         
         this.whichSkeletonsTracked = new boolean[6];
         this.skeletonCount = 0;
-        this.skeletonDataAvailable = false;
         //this.existingSkeletons = new ArrayList<Skeleton>(6);
         this.startKinect();
     }
@@ -50,44 +49,14 @@ public class KinectAdapter extends J4KSDK{
         this.stop();
         
     }
-  
-    public void getSkeletonData () {
-        
-        this.skeletonDataAvailable = true;
-        int skeletonNumber = 0;
-        
-        ;
-        
-        for (int skeleton = 0; skeleton < this.getSkeletons().length; skeleton++) {
-            if(this.getSkeletons()[skeleton] != null) {
-                Skeleton currentSkeleton = this.getSkeletons()[skeleton];
-                for(int joint = 0; joint < 25; joint++) {
-                    for(int axis = 0; axis < 3; axis++) {
-                        this.coordinates[skeletonNumber][joint][axis] = currentSkeleton.get3DJoint(joint)[axis];
-                        //System.out.println(Arrays.deepToString(coordinates));
-                    }
-                }
-                    
-                skeletonNumber++;
-            }
-            else {
-                for(int joint = 0; joint < 25; joint++) {
-                    for(int axis = 0; axis < 3; axis++) {
-                        this.coordinates[skeletonNumber][joint][axis] = this.emptyCoordinates[skeletonNumber][joint][axis];
-                        //System.out.println(Arrays.deepToString(coordinates));
-                    }
-                }
-            }
-        }
-        
-        
-        skeletonNumber = 0;
-    }
     
     @Override
     public void onSkeletonFrameEvent(boolean[] skeleton_tracked, float[] positions, float[] orientations, byte[] joint_status) {
+    
         
-        /*this.skeletonDataAvailable = true;
+        System.out.println("new skeleton");
+        
+        skeletonDataAvailable = true;
         this.whichSkeletonsTracked = skeleton_tracked;
         int skeletonNumber = 0;
         
@@ -103,13 +72,53 @@ public class KinectAdapter extends J4KSDK{
                 skeletonNumber++;
             }
         }
+       
         
+        skeletonNumber = 0;
         
-        skeletonNumber = 0;*/
+    
+    }
+    
+    /*public void getSkeletonData () {
+        
+        int skeletonNumber = 0;
+        
+        for (int skeleton = 0; skeleton < 6; skeleton++) {
+            if(this.getSkeletons()[skeleton] != null) {
+                Skeleton currentSkeleton = getSkeletons()[skeleton];
+                for(int joint = 0; joint < 25; joint++) {
+                    for(int axis = 0; axis < 3; axis++) {
+                        //System.out.println(this.coordinates[0][joint][axis]);
+                        this.coordinates[skeletonNumber][joint][axis] = currentSkeleton.get3DJoint(joint)[axis];
+                    }
+                }
+                    
+                skeletonNumber++;
+            }
+        }
+        
+        System.out.println(skeletonNumber);
+       
+        
+        skeletonNumber = 0;
         
         
     }
-   
+    
+    public int getCountOfExistingSkeletons () {
+
+         int internalSkeletonCount = 0;
+
+         for (Skeleton skeleton : this.getSkeletons()) {
+             if (skeleton != null) {
+                 internalSkeletonCount++;
+             }
+         }
+
+         this.skeletonCount = internalSkeletonCount;
+         return skeletonCount;
+     }*/
+    
     public int getCountOfExistingSkeletons () {
         
         int internalSkeletonCount = 0;
@@ -123,19 +132,6 @@ public class KinectAdapter extends J4KSDK{
         this.skeletonCount = internalSkeletonCount;
         return skeletonCount;
     }
-        
-    /*public boolean skeletonDataAvailable () {
-        
-        
-        for(boolean b : this.whichSkeletonsTracked) {
-            if(b) {
-                return true;
-            }
-        }
-        return false;
-    
-    }*/
-   
 
     @Override
     public void onColorFrameEvent(byte[] color_frame) {
@@ -147,9 +143,6 @@ public class KinectAdapter extends J4KSDK{
 
     }   
     
-    public void setSkeletonDataAvailable (boolean x) {
-        this.skeletonDataAvailable = false;
-    }
     
     public double[][][] getCurrentSkeletonCoordinates() {
         

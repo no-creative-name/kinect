@@ -9,6 +9,7 @@ public class FirstKinect {
     
     public static void update () {
         
+        System.out.println("update");
         skeletonGraphics.update();
         
     }

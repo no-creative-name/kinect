@@ -4,6 +4,8 @@ package firstkinect;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SkeletonService {
    
@@ -50,33 +52,22 @@ public class SkeletonService {
        
     public void update () {
         
-        //if (kinectAdapter.skeletonDataAvailable) {
-            kinectAdapter.getSkeletonData();
-            this.skeletonsAvailable = true;
-            
-            for (int skeletonId = 0; skeletonId < kinectAdapter.getCountOfExistingSkeletons(); skeletonId++) {
-                if (this.skeletons.isEmpty()) {
-                    System.out.println("");
-                    Skeleton skeleton = new Skeleton(kinectAdapter.getCurrentSkeletonCoordinates()[skeletonId],skeletonId);
-                    this.skeletons.add(skeleton);
-                }
-                else {
-                    this.getSkeletonBySkeletonId(skeletonId).update(kinectAdapter.getCurrentSkeletonCoordinates()[skeletonId]);
-                }
+        this.skeletonsAvailable = true;
+        
+        for (int skeletonId = 0; skeletonId < 1; skeletonId++) {
+            if (this.getSkeletonBySkeletonId(skeletonId) == null) {
+                Skeleton skeleton = new Skeleton(kinectAdapter.getCurrentSkeletonCoordinates()[skeletonId],skeletonId);
+                this.skeletons.add(skeleton);
             }
-            
-            //kinectAdapter.skeletonDataAvailable = false;
-        //}
-        
-        //else {    
-        
-            //this.removeAllSkeletons();
-            //this.skeletonsAvailable = false;
-        //}
-        
-       
+            else {
+                this.getSkeletonBySkeletonId(skeletonId).update(kinectAdapter.getCurrentSkeletonCoordinates()[skeletonId]);
+            }
+        }
     }
-    
+            
         
 }
+    
+        
+
     
