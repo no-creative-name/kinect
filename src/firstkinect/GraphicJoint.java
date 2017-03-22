@@ -20,8 +20,6 @@ public class GraphicJoint {
     public double width;
     public double height;
     
-    public boolean hasMoved;
-    
     /*public GraphicJoint (Graphics g, double x, double y, double z) {
         
         this.x = (int)x;
@@ -45,9 +43,9 @@ public class GraphicJoint {
     
     public GraphicJoint (Joint joint) {
         
-        double jointX = (joint.x+1)*500;
-        double jointY = (joint.y+1)*500;
-        double jointZ = 2-joint.z;
+        double jointX = (joint.getFilteredX()+1)*500;
+        double jointY = (joint.getFilteredY()+1)*500;
+        double jointZ = 2-joint.getFilteredZ();
         
         this.x = (int)jointX;
         this.y = (int)jointY;
@@ -56,8 +54,6 @@ public class GraphicJoint {
         this.joint = joint;
         
         this.id = joint.id;
-        
-        this.hasMoved = joint.hasMoved;
         
         if(this.z>0) {
             this.width = this.height = 10+25*this.z;

@@ -15,6 +15,9 @@ public class KinectAdapter extends J4KSDK{
     double[][][] emptyCoordinates;
     public boolean[] whichSkeletonsTracked;
     public static boolean skeletonDataAvailable = false;
+    public static long skeletonDataCounter = 0;
+    static long oldSkeletonDataCounter = 0;
+    public static boolean skeletonLost = true;
     public int skeletonCount;
     //List<Skeleton> existingSkeletons;
     
@@ -53,10 +56,10 @@ public class KinectAdapter extends J4KSDK{
     @Override
     public void onSkeletonFrameEvent(boolean[] skeleton_tracked, float[] positions, float[] orientations, byte[] joint_status) {
     
-        
-        System.out.println("new skeleton");
+        //System.out.println("new skeleton");
         
         skeletonDataAvailable = true;
+        skeletonDataCounter++;
         this.whichSkeletonsTracked = skeleton_tracked;
         int skeletonNumber = 0;
         
@@ -79,46 +82,6 @@ public class KinectAdapter extends J4KSDK{
     
     }
     
-    /*public void getSkeletonData () {
-        
-        int skeletonNumber = 0;
-        
-        for (int skeleton = 0; skeleton < 6; skeleton++) {
-            if(this.getSkeletons()[skeleton] != null) {
-                Skeleton currentSkeleton = getSkeletons()[skeleton];
-                for(int joint = 0; joint < 25; joint++) {
-                    for(int axis = 0; axis < 3; axis++) {
-                        //System.out.println(this.coordinates[0][joint][axis]);
-                        this.coordinates[skeletonNumber][joint][axis] = currentSkeleton.get3DJoint(joint)[axis];
-                    }
-                }
-                    
-                skeletonNumber++;
-            }
-        }
-        
-        System.out.println(skeletonNumber);
-       
-        
-        skeletonNumber = 0;
-        
-        
-    }
-    
-    public int getCountOfExistingSkeletons () {
-
-         int internalSkeletonCount = 0;
-
-         for (Skeleton skeleton : this.getSkeletons()) {
-             if (skeleton != null) {
-                 internalSkeletonCount++;
-             }
-         }
-
-         this.skeletonCount = internalSkeletonCount;
-         return skeletonCount;
-     }*/
-    
     public int getCountOfExistingSkeletons () {
         
         int internalSkeletonCount = 0;
@@ -135,7 +98,19 @@ public class KinectAdapter extends J4KSDK{
 
     @Override
     public void onColorFrameEvent(byte[] color_frame) {
-            //System.out.println("A new color frame was received.");
+        
+        
+        if (skeletonDataCounter > oldSkeletonDataCounter) {
+            skeletonLost = false;
+        }
+        
+        else {
+            skeletonLost = true;
+        }
+        
+        oldSkeletonDataCounter = skeletonDataCounter;
+        
+        
     }
 
     @Override

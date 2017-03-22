@@ -5,13 +5,14 @@ public class FirstKinect {
 
    
     public static boolean isRunning = false;
+    public static int counter = 0;
     public static SkeletonGraphics skeletonGraphics;
-    
+    static long oldFrameNumber;
+    static int oldCounter;
     public static void update () {
         
-        System.out.println("update");
+       
         skeletonGraphics.update();
-        
     }
     
     public static void checkForExit () {

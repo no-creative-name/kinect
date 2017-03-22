@@ -20,7 +20,7 @@ public class Rules {
   
     public static boolean isRightHandAboveHead (int rightHandCoordinate, int headCoordinate) {
         
-        if (headCoordinate < rightHandCoordinate) {
+        if (headCoordinate > rightHandCoordinate) {
             return true;
         }
         
@@ -29,17 +29,6 @@ public class Rules {
         }
  
     }
-    
-    public static boolean isRightHandAboveHead (double rightHandCoordinate, double headCoordinate) {
-        
-        if (headCoordinate < rightHandCoordinate) {
-            return true;
-        }
-        
-        else {
-            return false;
-        }
- 
-    }
+   
     
 }
