@@ -2,25 +2,23 @@
 package firstkinect;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 
-public class SkeletonGraphics {
+public class SkeletonGraphics extends JPanel{
     
-    JFrame mainFrame;
     SkeletonService skeletonService;
     List<GraphicSkeleton> graphicSkeletons;
     
-    public SkeletonGraphics () {
+    public SkeletonGraphics (JFrame container) {
         
+       container.add(this);
        this.skeletonService = new SkeletonService();
        this.graphicSkeletons = new ArrayList<GraphicSkeleton>();
-       
-       this.mainFrame = new JFrame();
-       this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       this.mainFrame.setSize(1000,1000);
        
     }
     
@@ -62,10 +60,8 @@ public class SkeletonGraphics {
     
     private void createGraphicSkeletonFromSkeleton(Skeleton skeleton) {
         
-        GraphicSkeleton graphicSkeleton = new GraphicSkeleton(this.mainFrame, skeleton);
+        GraphicSkeleton graphicSkeleton = new GraphicSkeleton(skeleton);
         this.graphicSkeletons.add(graphicSkeleton);
-        
-        this.mainFrame.setVisible(true);
         
     }
     
@@ -73,21 +69,50 @@ public class SkeletonGraphics {
         
         skeletonService.update();
         
-        if (this.skeletonService.skeletonsAvailable) {
-            for (Skeleton skeleton : this.skeletonService.getAllSkeletons()) {
-                if(this.getGraphicSkeletonForSkeleton(skeleton) == null){
-                    this.createGraphicSkeletonFromSkeleton(skeleton);
-                }
-                else {
-                    this.updateGraphicSkeleton(skeleton.id);
-                }
+        for (Skeleton skeleton : this.skeletonService.getAllSkeletons()) {
+            if(this.getGraphicSkeletonForSkeleton(skeleton) == null){
+                this.createGraphicSkeletonFromSkeleton(skeleton);
+            }
+            else {
+                this.updateGraphicSkeleton(skeleton.id);
             }
         }
-        else {
-            this.removeAllGraphicSkeletons();
-        }
-       
+        
+        this.repaint();
+        
     }
     
+    public void renderJoints (Graphics g) {
+        
+        for (GraphicSkeleton skeleton : graphicSkeletons) {
+            for (GraphicJoint joint : skeleton.joints) {
+                joint.setGraphics(g);
+                joint.render(Color.red);
+            }
+        }
+    }
+    
+    @Override
+    public void paintComponent (Graphics g) {
+       
+        if (!KinectAdapter.skeletonLost) {
+            super.paintComponent(g);
+            
+            g.setColor(Color.white);
+            g.fillRect(0, 0, 1000, 1000);
+            
+            this.renderJoints(g);
+           
+        }
+        
+        else
+        {
+            g.setColor(Color.white);
+            g.fillRect(0, 0, 1000, 1000);
+        }
+        
+       repaint();
+        
+    }
 }   
  

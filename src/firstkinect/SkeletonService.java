@@ -49,7 +49,6 @@ public class SkeletonService {
         
     }
     
-       
     public void update () {
         
         this.skeletonsAvailable = true;

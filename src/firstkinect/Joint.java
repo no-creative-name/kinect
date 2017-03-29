@@ -9,7 +9,6 @@ public class Joint {
     private double x;
     private double y;
     private double z;
-    public boolean hasMoved;
     
     double filteredX[];
     double filteredY[];
@@ -19,9 +18,13 @@ public class Joint {
     double filteredOutputY;
     double filteredOutputZ;
     
-    final int FILTER_SIZE = 2000;
+    double prevFilteredOutputX;
+    double prevFilteredOutputY;
+    double prevFilteredOutputZ;
+    
+    final int FILTER_SIZE = 200;
     int filterIdx = 0;
-    int prevFilterIdx = 0;
+    double currentSpeed = 0;
     
     double getX()
     {
@@ -49,7 +52,6 @@ public class Joint {
         return this.filteredOutputZ;
     }
 
-            
     public Joint (int id, double x, double y, double z) {
         
         this.id = id;
@@ -72,6 +74,17 @@ public class Joint {
         this.y = -y;
         this.z = z;
         
+        applyFilter();
+        calculateCurrentJointSpeed();
+        
+        this.prevFilteredOutputX = this.filteredOutputX;
+        this.prevFilteredOutputY = this.filteredOutputY;
+        this.prevFilteredOutputZ = this.filteredOutputZ;
+        
+    }
+    
+    private void applyFilter () {
+        
         this.filteredX[filterIdx]=this.x;
         this.filteredY[filterIdx]=this.y;
         this.filteredZ[filterIdx]=this.z;
@@ -91,10 +104,19 @@ public class Joint {
         this.filteredOutputX/=this.FILTER_SIZE;
         this.filteredOutputY/=this.FILTER_SIZE;
         this.filteredOutputZ/=this.FILTER_SIZE;
-       
-        this.prevFilterIdx = this.filterIdx;
-        
+      
     }
     
+    private void calculateCurrentJointSpeed () {
+        
+        double xSpeed = (this.filteredOutputX-this.prevFilteredOutputX);
+        double ySpeed = (this.filteredOutputY-this.prevFilteredOutputY);
+        double zSpeed = (this.filteredOutputZ-this.prevFilteredOutputZ);
+        
+        double totalSpeed = Math.sqrt(Math.pow(Math.sqrt(Math.pow(xSpeed, 2)+Math.pow(ySpeed, 2)),2)+Math.pow(zSpeed, 2));
+        
+        this.currentSpeed = totalSpeed*1000;
+        
+    }
     
 }

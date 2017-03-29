@@ -17,9 +17,8 @@ public class GraphicSkeleton extends JPanel {
     private int iterationCount;
     private int handOverHeadCounter = 0;
     
-    public GraphicSkeleton (JFrame container, Skeleton skeleton) {
+    public GraphicSkeleton (Skeleton skeleton) {
         
-        container.add(this);
         joints = new ArrayList<GraphicJoint>(25);
         this.skeleton = skeleton;
         this.skeletonId = this.skeleton.id;
@@ -48,52 +47,21 @@ public class GraphicSkeleton extends JPanel {
         }
         
     }
+
     
     public void render () {
         
+        
         updateJoints();
-        this.repaint();
         
     }
-    
-    @Override
-    public void paint (Graphics g) {
-       
-        if (!KinectAdapter.skeletonLost) {
-            super.paint(g);
-            
-            g.setColor(Color.white);
-            g.fillRect(0, 0, 1000, 1000);
-            
-            for (GraphicJoint joint : joints) {
-                if(joint.id == 3 || joint.id == 7) {
-                    joint.setGraphics(g);
-                    joint.render(Color.blue);
-                }
-                
-            }
-           
-            
-            if (Rules.isRightHandAboveHead(this.joints.get(7).y, this.joints.get(3).y)) {
-                this.handOverHeadCounter++;
-            }
-            
-            System.out.println(handOverHeadCounter);
-            
-        }
-        
-        else
-        {
-            g.setColor(Color.white);
-            g.fillRect(0, 0, 1000, 1000);
-        }
-        
-    }
+  
     
     public void update (Skeleton skeleton) {
         
         this.skeleton = skeleton;
         this.render();
+        
         
     }
    

@@ -1,14 +1,15 @@
 
 package firstkinect;
 
+import javax.swing.JFrame;
+
 public class FirstKinect {
 
    
     public static boolean isRunning = false;
-    public static int counter = 0;
     public static SkeletonGraphics skeletonGraphics;
-    static long oldFrameNumber;
-    static int oldCounter;
+    
+    
     public static void update () {
         
        
@@ -21,16 +22,22 @@ public class FirstKinect {
         
     }
 
-    public static void init () {
+    public static void init (JFrame mainFrame) {
         
-        skeletonGraphics = new SkeletonGraphics();
+        skeletonGraphics = new SkeletonGraphics(mainFrame);
         
     }
     
     
     public static void main(String[] args) {
 
-        init();
+        JFrame mainFrame = new JFrame();
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setSize(1000,1000);
+        
+        init(mainFrame);
+        
+        mainFrame.setVisible(true);
         
         isRunning = true;
         

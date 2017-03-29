@@ -20,6 +20,8 @@ public class GraphicJoint {
     public double width;
     public double height;
     
+    public double currentSpeed;
+    
     /*public GraphicJoint (Graphics g, double x, double y, double z) {
         
         this.x = (int)x;
@@ -44,7 +46,7 @@ public class GraphicJoint {
     public GraphicJoint (Joint joint) {
         
         double jointX = (joint.getFilteredX()+1)*500;
-        double jointY = (joint.getFilteredY()+1)*500;
+        double jointY = (joint.getFilteredY()+1)*500-200;
         double jointZ = 2-joint.getFilteredZ();
         
         this.x = (int)jointX;
@@ -54,6 +56,8 @@ public class GraphicJoint {
         this.joint = joint;
         
         this.id = joint.id;
+        
+        this.currentSpeed = joint.currentSpeed;
         
         if(this.z>0) {
             this.width = this.height = 10+25*this.z;
