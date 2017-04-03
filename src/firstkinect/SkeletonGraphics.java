@@ -6,8 +6,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,7 +19,9 @@ public class SkeletonGraphics extends JPanel{
     boolean alreadyClapped;
     static int clapCounter;
     static int BPM;
-    Timer timer = new Timer();
+    long timeBefore;
+    long currentTime;
+    static List tapDifferences = new ArrayList<Double>();
     
     public SkeletonGraphics (JFrame container) {
         
@@ -67,7 +67,6 @@ public class SkeletonGraphics extends JPanel{
         
         GraphicSkeleton graphicSkeleton = new GraphicSkeleton(skeleton);
         this.graphicSkeletons.add(graphicSkeleton);
-        this.timer.schedule(new Task(), 20000);
         
     }
     
@@ -134,20 +133,39 @@ public class SkeletonGraphics extends JPanel{
             if (!this.alreadyClapped) 
             {
                 if (skeleton.checkForClap) {
-                    clapCounter++;
+                    
+                    if(this.timeBefore != 0) {
+                        this.currentTime = System.currentTimeMillis();
+                        tapDifferences.add(
+                                (System.currentTimeMillis()-this.timeBefore)
+                        );
+                        this.timeBefore = this.currentTime;
+                        clapCounter++;
+                        this.calculateBPM();
+                        System.out.println(tapDifferences);
+                    }
+                    else {
+                        this.timeBefore = System.currentTimeMillis();
+                        clapCounter++;
+                    }
                     this.alreadyClapped = true;
                 }
             }
     }
     
-}   
- 
-class Task extends TimerTask
-{
-    
-    @Override public void run() {
-        System.out.println(SkeletonGraphics.clapCounter);
-        SkeletonGraphics.BPM = SkeletonGraphics.clapCounter*3;
+    private void calculateBPM () {
+        
+        long sum = 0;
+        
+        for (int i = 0; i < tapDifferences.size(); i++) {
+            sum += (long)tapDifferences.get(i);
+        }
+        
+        BPM =  (int)(
+                1/(double)(sum / tapDifferences.size()) 
+                * 
+                60000
+                );
     }
     
-}
+}   
