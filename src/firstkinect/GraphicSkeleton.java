@@ -14,14 +14,17 @@ public class GraphicSkeleton extends JPanel {
     public List<GraphicJoint> joints;
     public Skeleton skeleton;
     public int skeletonId;
+    public double relaxFactor;
+    public boolean checkForClap;
     private int iterationCount;
-    private int handOverHeadCounter = 0;
     
     public GraphicSkeleton (Skeleton skeleton) {
         
         joints = new ArrayList<GraphicJoint>(25);
         this.skeleton = skeleton;
         this.skeletonId = this.skeleton.id;
+        this.relaxFactor = skeleton.getRelaxFactor();
+        this.checkForClap = skeleton.getIfClap();
         initJoints();
   
     }
@@ -46,11 +49,14 @@ public class GraphicSkeleton extends JPanel {
             iterationCount++;
         }
         
+        this.relaxFactor = skeleton.getRelaxFactor();
+        this.checkForClap = skeleton.getIfClap();
+        
+        
     }
 
     
     public void render () {
-        
         
         updateJoints();
         
@@ -61,7 +67,6 @@ public class GraphicSkeleton extends JPanel {
         
         this.skeleton = skeleton;
         this.render();
-        
         
     }
    

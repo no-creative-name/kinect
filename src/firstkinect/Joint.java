@@ -52,6 +52,10 @@ public class Joint {
         return this.filteredOutputZ;
     }
 
+    double getCurrentSpeed() {
+        return this.currentSpeed;
+    }
+    
     public Joint (int id, double x, double y, double z) {
         
         this.id = id;

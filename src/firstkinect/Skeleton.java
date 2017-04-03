@@ -30,9 +30,6 @@ public class Skeleton {
     public void update (double[][] currentSkeletonCoordinates) {
         
         updateWholeBody(currentSkeletonCoordinates);
-        if(getVectorBetween(5,7)[0] != 0) {
-            System.out.println(getDegreeBetween(this.getVectorBetween(5, 7), this.getVectorBetween(5, 4)));
-        }
     }
    
     public void addWholeBody (double[][] currentSkeletonCoordinates) {
@@ -50,8 +47,8 @@ public class Skeleton {
         }
     } 
     
-    // von a nach b
-    private double[] getVectorBetween (int a, int b) {
+    // a to b
+    public double[] getVectorBetween (int a, int b) {
         
         double x = (this.joints.get(b).filteredOutputX-this.joints.get(a).filteredOutputX);
         double y = (this.joints.get(b).filteredOutputY-this.joints.get(a).filteredOutputY);
@@ -83,6 +80,66 @@ public class Skeleton {
         
         return degree * 180.0 / Math.PI;
     }
+
+    public double getRelaxFactor () {
+        
+        double relaxFactor = 
+                (this.getDegreeBetween(
+                        this.getVectorBetween(JointNames.ELBOW_LEFT, JointNames.WRIST_LEFT),
+                        this.getVectorBetween(JointNames.ELBOW_LEFT, JointNames.SHOULDER_LEFT)
+                ))
+                +
+                (this.getDegreeBetween(
+                        this.getVectorBetween(JointNames.KNEE_LEFT, JointNames.ANKLE_LEFT),
+                        this.getVectorBetween(JointNames.KNEE_LEFT, JointNames.HIP_LEFT)
+                ))
+                +
+                (Math.abs(180-this.getDegreeBetween(
+                        this.getVectorBetween(JointNames.SHOULDER_LEFT, JointNames.SPINE_MID),
+                        this.getVectorBetween(JointNames.SHOULDER_LEFT, JointNames.ELBOW_LEFT)
+                )))
+                +
+                (Math.abs(180-this.getDegreeBetween(
+                        this.getVectorBetween(JointNames.HIP_LEFT, JointNames.SPINE_BASE),
+                        this.getVectorBetween(JointNames.HIP_LEFT, JointNames.KNEE_LEFT)
+                )))
+                +
+                (this.getDegreeBetween(
+                        this.getVectorBetween(JointNames.ELBOW_RIGHT, JointNames.WRIST_RIGHT),
+                        this.getVectorBetween(JointNames.ELBOW_RIGHT, JointNames.SHOULDER_RIGHT)
+                ))
+                +
+                (this.getDegreeBetween(
+                        this.getVectorBetween(JointNames.KNEE_RIGHT, JointNames.ANKLE_RIGHT),
+                        this.getVectorBetween(JointNames.KNEE_RIGHT, JointNames.HIP_RIGHT)
+                )
+                +
+                (Math.abs(180-this.getDegreeBetween(
+                        this.getVectorBetween(JointNames.SHOULDER_RIGHT, JointNames.SPINE_MID),
+                        this.getVectorBetween(JointNames.SHOULDER_RIGHT, JointNames.ELBOW_RIGHT)
+                )))
+                +
+                (Math.abs(180-this.getDegreeBetween(
+                        this.getVectorBetween(JointNames.HIP_RIGHT, JointNames.SPINE_BASE),
+                        this.getVectorBetween(JointNames.HIP_RIGHT, JointNames.KNEE_RIGHT)
+                )))
+                );
+        
+        return relaxFactor / 11.5;
+        
+    }
     
+    public boolean getIfClap () {
+        
+        if (this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) < 0.1 
+         && this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) != 0 ) 
+        {
+            return true;
+        }
+        else {
+            return false;
+        }
+        
+    }
     
 }

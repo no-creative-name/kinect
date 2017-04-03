@@ -55,9 +55,7 @@ public class KinectAdapter extends J4KSDK{
     
     @Override
     public void onSkeletonFrameEvent(boolean[] skeleton_tracked, float[] positions, float[] orientations, byte[] joint_status) {
-    
-        //System.out.println("new skeleton");
-        
+
         skeletonDataAvailable = true;
         skeletonDataCounter++;
         this.whichSkeletonsTracked = skeleton_tracked;
@@ -71,15 +69,10 @@ public class KinectAdapter extends J4KSDK{
                         this.coordinates[skeletonNumber][joint][axis] = currentSkeleton.get3DJoint(joint)[axis];
                     }
                 }
-                    
                 skeletonNumber++;
             }
         }
-       
-        
         skeletonNumber = 0;
-        
-    
     }
     
     public int getCountOfExistingSkeletons () {

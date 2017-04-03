@@ -27,12 +27,6 @@ public class SkeletonService {
         
     }
     
-    public void removeAllSkeletons () {
-        
-        this.skeletons.removeAll(skeletons);
-       
-    }
-    
     public Skeleton getSkeletonBySkeletonId (int id) {
         
         Skeleton foundSkeleton = null;
@@ -53,6 +47,7 @@ public class SkeletonService {
         
         this.skeletonsAvailable = true;
         
+        if(KinectAdapter.skeletonDataAvailable) {
         for (int skeletonId = 0; skeletonId < 1; skeletonId++) {
             if (this.getSkeletonBySkeletonId(skeletonId) == null) {
                 Skeleton skeleton = new Skeleton(kinectAdapter.getCurrentSkeletonCoordinates()[skeletonId],skeletonId);
@@ -61,6 +56,7 @@ public class SkeletonService {
             else {
                 this.getSkeletonBySkeletonId(skeletonId).update(kinectAdapter.getCurrentSkeletonCoordinates()[skeletonId]);
             }
+        }
         }
     }
             

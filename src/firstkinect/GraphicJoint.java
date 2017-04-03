@@ -22,26 +22,6 @@ public class GraphicJoint {
     
     public double currentSpeed;
     
-    /*public GraphicJoint (Graphics g, double x, double y, double z) {
-        
-        this.x = (int)x;
-        this.y = (int)y;
-        this.z = (int)z;
-        
-        this.width = this.height = 10;
-        this.visualization = g;
-        
-    }
-    
-    public GraphicJoint (double x, double y, double z) {
-        
-        this.x = (int)x;
-        this.y = (int)y;
-        this.z = (int)z;
-        
-        this.width = this.height = 10;
-        
-    }*/
     
     public GraphicJoint (Joint joint) {
         
