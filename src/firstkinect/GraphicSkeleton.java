@@ -15,7 +15,7 @@ public class GraphicSkeleton extends JPanel {
     public Skeleton skeleton;
     public int skeletonId;
     public double relaxFactor;
-    public boolean checkForClap;
+    public boolean isCurrentlyClapping;
     private int iterationCount;
     
     public GraphicSkeleton (Skeleton skeleton) {
@@ -24,7 +24,7 @@ public class GraphicSkeleton extends JPanel {
         this.skeleton = skeleton;
         this.skeletonId = this.skeleton.id;
         this.relaxFactor = skeleton.getRelaxFactor();
-        this.checkForClap = skeleton.getIfClap();
+        this.isCurrentlyClapping = skeleton.isCurrentlyClapping();
         initJoints();
   
     }
@@ -50,7 +50,7 @@ public class GraphicSkeleton extends JPanel {
         }
         
         this.relaxFactor = skeleton.getRelaxFactor();
-        this.checkForClap = skeleton.getIfClap();
+        this.isCurrentlyClapping = skeleton.isCurrentlyClapping();
         
         
     }

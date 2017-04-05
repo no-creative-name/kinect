@@ -69,22 +69,57 @@ public class SkeletonGraphics extends JPanel{
         this.graphicSkeletons.add(graphicSkeleton);
         
     }
+
+    private void countClaps (GraphicSkeleton skeleton) {
+        
+        if (!skeleton.isCurrentlyClapping) 
+            {
+                this.alreadyClapped = false;
+            }
+            
+        if (!this.alreadyClapped && skeleton.isCurrentlyClapping) 
+            {
+                
+                if(this.timeBefore != 0) {
+                    this.currentTime = System.currentTimeMillis();
+                    tapDifferences.add(
+                            (this.currentTime-this.timeBefore)
+                    );
+
+                    if(tapDifferences.size() > 2 && (long)tapDifferences.get(clapCounter-1) - (long)tapDifferences.get(clapCounter-2) > 300) {
+                        BPM = 0;
+                        tapDifferences.clear();
+                        clapCounter = 0;
+                        this.timeBefore = this.currentTime;
+                    }
+                    else {
+                        this.timeBefore = this.currentTime;
+                        clapCounter++;
+                        this.calculateBPM();
+                    }
+                }
+                else {
+                    this.timeBefore = System.currentTimeMillis();
+                    clapCounter++;
+                }
+                this.alreadyClapped = true;
+                
+            }
+    }
     
-    public void update () {
+    private void calculateBPM () {
         
-        skeletonService.update();
+        long sum = 0;
         
-        for (Skeleton skeleton : this.skeletonService.getAllSkeletons()) {
-            if(this.getGraphicSkeletonForSkeleton(skeleton) == null){
-                this.createGraphicSkeletonFromSkeleton(skeleton);
-            }
-            else {
-                this.updateGraphicSkeleton(skeleton.id);
-            }
+        for (int i = 0; i < tapDifferences.size(); i++) {
+            sum += (long)tapDifferences.get(i);
         }
         
-        this.repaint();
-        
+        BPM =  (int)(
+                1/(double)(sum / tapDifferences.size()) 
+                * 
+                60000
+                );
     }
     
     public void renderJoints (Graphics g) {
@@ -96,7 +131,7 @@ public class SkeletonGraphics extends JPanel{
             }
             
             this.countClaps(skeleton);
-            this.infoText.setText("You are " + (double)Math.round(skeleton.relaxFactor * 100d) / 100d + "% relaxed! Claps: " + clapCounter + " BPM: " + BPM);
+            this.infoText.setText("You are " + (int)(Math.round(skeleton.relaxFactor * 100d) / 100d) + "% relaxed! Claps: " + clapCounter + " BPM: " + BPM);
         }
     }
 
@@ -125,47 +160,21 @@ public class SkeletonGraphics extends JPanel{
         
     }
     
-    private void countClaps (GraphicSkeleton skeleton) {
-         if (!skeleton.checkForClap) {
-                this.alreadyClapped = false;
-            }
-            
-            if (!this.alreadyClapped) 
-            {
-                if (skeleton.checkForClap) {
-                    
-                    if(this.timeBefore != 0) {
-                        this.currentTime = System.currentTimeMillis();
-                        tapDifferences.add(
-                                (System.currentTimeMillis()-this.timeBefore)
-                        );
-                        this.timeBefore = this.currentTime;
-                        clapCounter++;
-                        this.calculateBPM();
-                        System.out.println(tapDifferences);
-                    }
-                    else {
-                        this.timeBefore = System.currentTimeMillis();
-                        clapCounter++;
-                    }
-                    this.alreadyClapped = true;
-                }
-            }
-    }
-    
-    private void calculateBPM () {
+    public void update () {
         
-        long sum = 0;
+        skeletonService.update();
         
-        for (int i = 0; i < tapDifferences.size(); i++) {
-            sum += (long)tapDifferences.get(i);
+        for (Skeleton skeleton : this.skeletonService.getAllSkeletons()) {
+            if(this.getGraphicSkeletonForSkeleton(skeleton) == null){
+                this.createGraphicSkeletonFromSkeleton(skeleton);
+            }
+            else {
+                this.updateGraphicSkeleton(skeleton.id);
+            }
         }
         
-        BPM =  (int)(
-                1/(double)(sum / tapDifferences.size()) 
-                * 
-                60000
-                );
+        this.repaint();
+        
     }
     
 }   

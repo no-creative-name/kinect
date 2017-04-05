@@ -27,11 +27,6 @@ public class Skeleton {
         
     }
     
-    public void update (double[][] currentSkeletonCoordinates) {
-        
-        updateWholeBody(currentSkeletonCoordinates);
-    }
-   
     public void addWholeBody (double[][] currentSkeletonCoordinates) {
        
         for (int id = 0; id < 25; id++) {
@@ -129,7 +124,7 @@ public class Skeleton {
         
     }
     
-    public boolean getIfClap () {
+    public boolean isCurrentlyClapping () {
         
         if (this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) < 0.1 
          && this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) != 0 ) 
@@ -142,4 +137,9 @@ public class Skeleton {
         
     }
     
+    public void update (double[][] currentSkeletonCoordinates) {
+        
+        updateWholeBody(currentSkeletonCoordinates);
+    }
+       
 }

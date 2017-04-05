@@ -5,6 +5,8 @@
         <group>
             <file>file:/D:/Code/Java/kinect/KinectTry/firstKinect/src/firstkinect/Skeleton.java</file>
             <file>file:/D:/Code/Java/kinect/KinectTry/firstKinect/src/firstkinect/GraphicSkeleton.java</file>
+            <file>file:/D:/Code/Java/kinect/KinectTry/firstKinect/src/firstkinect/FirstKinect.java</file>
+            <file>file:/D:/Code/Java/kinect/KinectTry/firstKinect/src/firstkinect/SkeletonService.java</file>
             <file>file:/D:/Code/Java/kinect/KinectTry/firstKinect/src/firstkinect/SkeletonGraphics.java</file>
             <file>file:/D:/Code/Java/kinect/KinectTry/firstKinect/src/firstkinect/GraphicJoint.java</file>
         </group>
