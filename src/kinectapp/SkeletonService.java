@@ -1,5 +1,5 @@
 
-package firstkinect;
+package kinectapp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +21,8 @@ public class SkeletonService {
         
     }
     
+    
+    
     public List<Skeleton> getAllSkeletons () {
         
         return this.skeletons;
@@ -33,7 +35,7 @@ public class SkeletonService {
         
         for (Skeleton skeleton : this.skeletons) {
             
-            if(skeleton.id == id) {
+            if(skeleton.getId() == id) {
                 foundSkeleton = skeleton;
             }
             
@@ -42,6 +44,8 @@ public class SkeletonService {
         return foundSkeleton; 
         
     }
+    
+    
     
     public void update () {
         

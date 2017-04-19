@@ -1,60 +1,30 @@
 
-package firstkinect;
+package kinectapp;
 
 
 public class Joint {
     
     public int id;
     
-    private double x;
-    private double y;
-    private double z;
-    
-    double filteredX[];
-    double filteredY[];
-    double filteredZ[];
-    
     double filteredOutputX;
     double filteredOutputY;
     double filteredOutputZ;
     
-    double prevFilteredOutputX;
-    double prevFilteredOutputY;
-    double prevFilteredOutputZ;
+    private double x;
+    private double y;
+    private double z;
     
-    final int FILTER_SIZE = 200;
-    int filterIdx = 0;
-    double currentSpeed = 0;
+    private double filteredX[];
+    private double filteredY[];
+    private double filteredZ[];
     
-    double getX()
-    {
-        return this.x;
-    }
-    double getY()
-    {
-        return this.y;
-    }
-    double getZ()
-    {
-        return this.z;
-    }
+    private double prevFilteredOutputX;
+    private double prevFilteredOutputY;
+    private double prevFilteredOutputZ;
     
-    double getFilteredX()
-    {
-        return this.filteredOutputX;
-    }
-    double getFilteredY()
-    {
-        return this.filteredOutputY;
-    }
-    double getFilteredZ()
-    {
-        return this.filteredOutputZ;
-    }
-
-    double getCurrentSpeed() {
-        return this.currentSpeed;
-    }
+    private final int FILTER_SIZE = 1000;
+    private int filterIdx = 0;
+    private double currentSpeed = 0;
     
     public Joint (int id, double x, double y, double z) {
         
@@ -69,23 +39,39 @@ public class Joint {
         this.filteredZ = new double[FILTER_SIZE];
         
     }
+        
     
-    public void update (double x, double y, double z) {
-        
-        this.filterIdx = (this.filterIdx+1) % FILTER_SIZE;
-        
-        this.x = x;
-        this.y = -y;
-        this.z = z;
-        
-        applyFilter();
-        calculateCurrentJointSpeed();
-        
-        this.prevFilteredOutputX = this.filteredOutputX;
-        this.prevFilteredOutputY = this.filteredOutputY;
-        this.prevFilteredOutputZ = this.filteredOutputZ;
-        
+    
+    public double getX()
+    {
+        return this.x;
     }
+    public double getY()
+    {
+        return this.y;
+    }
+    public double getZ()
+    {
+        return this.z;
+    }
+    
+    public double getFilteredX()
+    {
+        return this.filteredOutputX;
+    }
+    public double getFilteredY()
+    {
+        return this.filteredOutputY;
+    }
+    public double getFilteredZ()
+    {
+        return this.filteredOutputZ;
+    }
+    public double getCurrentSpeed() {
+        return this.currentSpeed;
+    }
+    
+
     
     private void applyFilter () {
         
@@ -120,6 +106,25 @@ public class Joint {
         double totalSpeed = Math.sqrt(Math.pow(Math.sqrt(Math.pow(xSpeed, 2)+Math.pow(ySpeed, 2)),2)+Math.pow(zSpeed, 2));
         
         this.currentSpeed = totalSpeed*1000;
+        
+    }
+    
+    
+    
+    public void update (double x, double y, double z) {
+        
+        this.filterIdx = (this.filterIdx+1) % FILTER_SIZE;
+        
+        this.x = x;
+        this.y = -y;
+        this.z = z;
+        
+        applyFilter();
+        calculateCurrentJointSpeed();
+        
+        this.prevFilteredOutputX = this.filteredOutputX;
+        this.prevFilteredOutputY = this.filteredOutputY;
+        this.prevFilteredOutputZ = this.filteredOutputZ;
         
     }
     

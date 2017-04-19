@@ -1,5 +1,5 @@
 
-package firstkinect;
+package kinectapp;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,57 +11,89 @@ import javax.swing.JPanel;
 
 public class GraphicSkeleton extends JPanel {
     
-    public List<GraphicJoint> joints;
-    public Skeleton skeleton;
-    public int skeletonId;
-    public double relaxFactor;
-    public boolean isCurrentlyClapping;
+    private List<GraphicJoint> joints;
+    private Skeleton skeleton;
+    private int skeletonId;
+    private double relaxFactor;
     private int iterationCount;
+    private int clapCount;
+    private int BPM;
     
     public GraphicSkeleton (Skeleton skeleton) {
         
         joints = new ArrayList<GraphicJoint>(25);
         this.skeleton = skeleton;
-        this.skeletonId = this.skeleton.id;
+        this.skeletonId = this.skeleton.getId();
         this.relaxFactor = skeleton.getRelaxFactor();
-        this.isCurrentlyClapping = skeleton.isCurrentlyClapping();
-        initJoints();
+        this.initJoints();
   
     }
+  
+    public List<GraphicJoint> getJoints () {
+        
+        return this.joints;
+        
+    }
     
-    public void initJoints () {
+    public int getId () {
+        
+        return this.skeletonId;
+        
+    }
+    
+    public int getClapCount () {
+        
+        return this.clapCount;        
+        
+    }
+    
+    public int getBPM () {
+        
+        return this.BPM;        
+        
+    }
+    
+    public double getRelaxFactor () {
+        
+        return this.relaxFactor;        
+        
+    }
+    
+    
+    
+    private void initJoints () {
         
         this.iterationCount = 0;
         
-        for (Joint joint: this.skeleton.joints) {
+        for (Joint joint: this.skeleton.getJoints()) {
             this.joints.add(iterationCount, GraphicJoint.fromJoint(joint));
             iterationCount++;
         }
         
     }
     
-    public void updateJoints () {
+    private void updateJoints () {
         
         this.iterationCount = 0;
         
-        for (Joint joint: this.skeleton.joints) {
+        for (Joint joint: this.skeleton.getJoints()) {
             this.joints.set(iterationCount, GraphicJoint.fromJoint(joint));
             iterationCount++;
         }
         
         this.relaxFactor = skeleton.getRelaxFactor();
-        this.isCurrentlyClapping = skeleton.isCurrentlyClapping();
-        
+        this.clapCount = skeleton.getClapCount();
+        this.BPM = skeleton.getBPM();
         
     }
 
-    
-    public void render () {
+    private void render () {
         
         updateJoints();
         
     }
-  
+    
+    
     
     public void update (Skeleton skeleton) {
         

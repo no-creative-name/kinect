@@ -1,21 +1,16 @@
 
-package firstkinect;
+package kinectapp;
 
 import javax.swing.JFrame;
 
-public class FirstKinect {
+public class KinectApp {
 
    
     public static boolean isRunning = false;
     public static SkeletonGraphics skeletonGraphics;
     
     
-    public static void update () {
-        
-       
-        skeletonGraphics.update();
-    }
-    
+
     public static void checkForExit () {
         
         isRunning = false;
@@ -26,6 +21,13 @@ public class FirstKinect {
         
         skeletonGraphics = new SkeletonGraphics(mainFrame);
         
+    }
+    
+    
+    
+    public static void update () {
+        
+        skeletonGraphics.update();
     }
     
     

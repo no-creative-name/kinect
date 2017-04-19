@@ -1,5 +1,5 @@
 
-package firstkinect;
+package kinectapp;
 
 
 import edu.ufl.digitalworlds.j4k.J4KSDK; 

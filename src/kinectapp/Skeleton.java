@@ -1,5 +1,5 @@
 
-package firstkinect;
+package kinectapp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,8 +8,15 @@ import java.util.List;
 
 public class Skeleton {
     
-    public List<Joint> joints;
-    public int id;
+    private List<Joint> joints;
+    private int id;
+    
+    private boolean alreadyClapped;
+    private int clapCounter;
+    private int BPM;
+    private long timeBefore;
+    private long currentTime;
+    private static List tapDifferences = new ArrayList<Double>();
     
     public Skeleton (double[][] currentSkeletonCoordinates, int id) {
         
@@ -19,30 +26,33 @@ public class Skeleton {
         
     }
     
-    public List<Joint> createJoints (double[][] currentSkeletonCoordinates) {
+    
+    
+    public List<Joint> getJoints () {
         
-        addWholeBody(currentSkeletonCoordinates);
-        
-        return joints;
+        return this.joints;
         
     }
     
-    public void addWholeBody (double[][] currentSkeletonCoordinates) {
-       
-        for (int id = 0; id < 25; id++) {
-            Joint joint = new Joint(id,currentSkeletonCoordinates[id][0],currentSkeletonCoordinates[id][1],currentSkeletonCoordinates[id][2]);
-            this.joints.add(joint);
-        }
-    } 
+    public int getId () {
+        
+        return this.id;
+        
+    }
     
-    public void updateWholeBody (double[][] currentSkeletonCoordinates) {
-       
-        for (int id = 0; id < 25; id++) {
-            this.joints.get(id).update(currentSkeletonCoordinates[id][0],currentSkeletonCoordinates[id][1],currentSkeletonCoordinates[id][2]);
-        }
-    } 
+    public int getClapCount () {
+        
+        return this.clapCounter;        
+        
+    }
     
-    // a to b
+    public int getBPM () {
+        
+        return this.BPM;        
+        
+    }
+    
+        // a to b
     public double[] getVectorBetween (int a, int b) {
         
         double x = (this.joints.get(b).filteredOutputX-this.joints.get(a).filteredOutputX);
@@ -123,10 +133,10 @@ public class Skeleton {
         return relaxFactor / 11.5;
         
     }
-    
+        
     public boolean isCurrentlyClapping () {
         
-        if (this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) < 0.1 
+        if (this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) < 0.1
          && this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) != 0 ) 
         {
             return true;
@@ -136,10 +146,93 @@ public class Skeleton {
         }
         
     }
+
+    
+    
+    public List<Joint> createJoints (double[][] currentSkeletonCoordinates) {
+        
+        addWholeBody(currentSkeletonCoordinates);
+        
+        return joints;
+        
+    }
+    
+    public void addWholeBody (double[][] currentSkeletonCoordinates) {
+       
+        for (int id = 0; id < 25; id++) {
+            Joint joint = new Joint(id,currentSkeletonCoordinates[id][0],currentSkeletonCoordinates[id][1],currentSkeletonCoordinates[id][2]);
+            this.joints.add(joint);
+        }
+    } 
+    
+    public void updateWholeBody (double[][] currentSkeletonCoordinates) {
+       
+        for (int id = 0; id < 25; id++) {
+            this.joints.get(id).update(currentSkeletonCoordinates[id][0],currentSkeletonCoordinates[id][1],currentSkeletonCoordinates[id][2]);
+        }
+    } 
+    
+    
+
+    private void countClaps () {
+        
+        if (!this.isCurrentlyClapping()) 
+            {
+                this.alreadyClapped = false;
+            }
+            
+        if (!this.alreadyClapped && this.isCurrentlyClapping()) 
+            {
+                
+                if(this.timeBefore != 0) {
+                    this.currentTime = System.currentTimeMillis();
+                    this.tapDifferences.add(
+                            (this.currentTime-this.timeBefore)
+                    );
+
+                    if(this.tapDifferences.size() > 2 && Math.abs((long)this.tapDifferences.get(clapCounter-1) - (long)this.tapDifferences.get(clapCounter-2)) > 300) {
+                        this.BPM = 0;
+                        this.tapDifferences.clear();
+                        this.clapCounter = 0;
+                        this.timeBefore = this.currentTime;
+                    }
+                    else {
+                        this.timeBefore = this.currentTime;
+                        this.clapCounter++;
+                        this.calculateBPM();
+                    }
+                }
+                else {
+                    this.timeBefore = System.currentTimeMillis();
+                    this.clapCounter++;
+                }
+                this.alreadyClapped = true;
+                
+            }
+    }
+    
+    private void calculateBPM () {
+        
+        long sum = 0;
+        
+        for (int i = 0; i < tapDifferences.size(); i++) {
+            sum += (long)tapDifferences.get(i);
+        }
+        
+        BPM =  (int)(
+                1/(double)(sum / tapDifferences.size()) 
+                * 
+                60000
+                );
+    }
+   
+    
     
     public void update (double[][] currentSkeletonCoordinates) {
         
-        updateWholeBody(currentSkeletonCoordinates);
+        this.updateWholeBody(currentSkeletonCoordinates);
+        this.countClaps();
+        
     }
        
 }

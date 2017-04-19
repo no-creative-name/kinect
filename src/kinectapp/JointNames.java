@@ -1,5 +1,5 @@
 
-package firstkinect;
+package kinectapp;
 
 
 public class JointNames {

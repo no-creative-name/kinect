@@ -1,27 +1,26 @@
 
-package firstkinect;
+package kinectapp;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 
 public class SkeletonGraphics extends JPanel{
     
-    SkeletonService skeletonService;
-    List<GraphicSkeleton> graphicSkeletons;
-    JLabel infoText;
-    boolean alreadyClapped;
-    static int clapCounter;
-    static int BPM;
-    long timeBefore;
-    long currentTime;
-    static List tapDifferences = new ArrayList<Double>();
+    private SkeletonService skeletonService;
+    private List<GraphicSkeleton> graphicSkeletons;
+    private JLabel infoText;
+    private boolean tick = false;
+    private Timer timer;
     
     public SkeletonGraphics (JFrame container) {
         
@@ -32,11 +31,27 @@ public class SkeletonGraphics extends JPanel{
        this.skeletonService = new SkeletonService();
        this.graphicSkeletons = new ArrayList<GraphicSkeleton>();
        
+       timer = new Timer(60000/120, new ActionListener() {
+                                            public void actionPerformed( ActionEvent e ) {
+                                                if(!tick) {
+                                                    tick = true;
+                                                            }
+                                                else {
+                                                    tick = false;
+                                                }
+                                            }
+                                          });
+       timer.setInitialDelay(60000/120);
+       timer.start();
+       
+       
     }
+    
+    
     
     private GraphicSkeleton getGraphicSkeletonForSkeleton (Skeleton skeleton) {
         
-        return getGraphicSkeletonBySkeletonId(skeleton.id);
+        return getGraphicSkeletonBySkeletonId(skeleton.getId());
         
     } 
     
@@ -52,7 +67,7 @@ public class SkeletonGraphics extends JPanel{
         
         for (GraphicSkeleton graphicSkeleton : this.graphicSkeletons) {
             
-            if(graphicSkeleton.skeletonId == skeletonId) {
+            if(graphicSkeleton.getId() == skeletonId) {
                 foundSkeleton = graphicSkeleton;
                 break;
             }
@@ -69,69 +84,23 @@ public class SkeletonGraphics extends JPanel{
         this.graphicSkeletons.add(graphicSkeleton);
         
     }
-
-    private void countClaps (GraphicSkeleton skeleton) {
-        
-        if (!skeleton.isCurrentlyClapping) 
-            {
-                this.alreadyClapped = false;
-            }
-            
-        if (!this.alreadyClapped && skeleton.isCurrentlyClapping) 
-            {
-                
-                if(this.timeBefore != 0) {
-                    this.currentTime = System.currentTimeMillis();
-                    tapDifferences.add(
-                            (this.currentTime-this.timeBefore)
-                    );
-
-                    if(tapDifferences.size() > 2 && (long)tapDifferences.get(clapCounter-1) - (long)tapDifferences.get(clapCounter-2) > 300) {
-                        BPM = 0;
-                        tapDifferences.clear();
-                        clapCounter = 0;
-                        this.timeBefore = this.currentTime;
-                    }
-                    else {
-                        this.timeBefore = this.currentTime;
-                        clapCounter++;
-                        this.calculateBPM();
-                    }
-                }
-                else {
-                    this.timeBefore = System.currentTimeMillis();
-                    clapCounter++;
-                }
-                this.alreadyClapped = true;
-                
-            }
-    }
     
-    private void calculateBPM () {
-        
-        long sum = 0;
-        
-        for (int i = 0; i < tapDifferences.size(); i++) {
-            sum += (long)tapDifferences.get(i);
-        }
-        
-        BPM =  (int)(
-                1/(double)(sum / tapDifferences.size()) 
-                * 
-                60000
-                );
-    }
-    
-    public void renderJoints (Graphics g) {
+    private void renderJoints (Graphics g) {
         
         for (GraphicSkeleton skeleton : graphicSkeletons) {
-            for (GraphicJoint joint : skeleton.joints) {
+            
+            for (GraphicJoint joint : skeleton.getJoints()) {
                 joint.setGraphics(g);
                 joint.render(Color.red);
             }
             
-            this.countClaps(skeleton);
-            this.infoText.setText("You are " + (int)(Math.round(skeleton.relaxFactor * 100d) / 100d) + "% relaxed! Claps: " + clapCounter + " BPM: " + BPM);
+            if(skeleton.getBPM() == 0) {
+                this.timer.setDelay(60000/120);
+            }
+            else {
+                this.timer.setDelay(60000/skeleton.getBPM());
+            }
+            this.infoText.setText("You are " + (int)(Math.round(skeleton.getRelaxFactor() * 100d) / 100d) + "% relaxed! Claps: " + skeleton.getClapCount() + " BPM: " + skeleton.getBPM());
         }
     }
 
@@ -142,16 +111,26 @@ public class SkeletonGraphics extends JPanel{
         {
             super.paintComponent(g);
             
-            g.setColor(Color.white); 
+            if(tick) {
+                g.setColor(Color.white);
+            }
+            else {
+                g.setColor(Color.blue);
+            }
+            
             g.fillRect(0, 0, 1000, 1000);
             
             this.renderJoints(g);
-           
         }
         
         else
         {
-            g.setColor(Color.white);
+            if(tick) {
+                g.setColor(Color.white);
+            }
+            else {
+                g.setColor(Color.blue);
+            }
             g.fillRect(0, 0, 1000, 1000);
            
         }
@@ -159,6 +138,8 @@ public class SkeletonGraphics extends JPanel{
        repaint();
         
     }
+    
+    
     
     public void update () {
         
@@ -169,7 +150,7 @@ public class SkeletonGraphics extends JPanel{
                 this.createGraphicSkeletonFromSkeleton(skeleton);
             }
             else {
-                this.updateGraphicSkeleton(skeleton.id);
+                this.updateGraphicSkeleton(skeleton.getId());
             }
         }
         
@@ -178,3 +159,5 @@ public class SkeletonGraphics extends JPanel{
     }
     
 }   
+
+

@@ -1,5 +1,5 @@
 
-package firstkinect;
+package kinectapp;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -7,20 +7,20 @@ import java.awt.Graphics;
 
 public class GraphicJoint {
     
-    public Graphics visualization;
+    private Graphics visualization;
     
-    public Joint joint;
+    private Joint joint;
     
-    public int x;
-    public int y;
-    public double z;
+    private int x;
+    private int y;
+    private double z;
     
-    public int id;
+    private int id;
     
-    public double width;
-    public double height;
+    private double width;
+    private double height;
     
-    public double currentSpeed;
+    private double currentSpeed;
     
     
     public GraphicJoint (Joint joint) {
@@ -37,7 +37,7 @@ public class GraphicJoint {
         
         this.id = joint.id;
         
-        this.currentSpeed = joint.currentSpeed;
+        this.currentSpeed = joint.getCurrentSpeed();
         
         if(this.z>0) {
             this.width = this.height = 10+25*this.z;
@@ -51,6 +51,7 @@ public class GraphicJoint {
             this.height = this.height+30;
         }
     }
+    
     
     
     public void setGraphics (Graphics g) {
