@@ -100,7 +100,7 @@ public class SkeletonGraphics extends JPanel{
             else {
                 this.timer.setDelay(60000/skeleton.getBPM());
             }
-            this.infoText.setText("You are " + (int)(Math.round(skeleton.getRelaxFactor() * 100d) / 100d) + "% relaxed! Claps: " + skeleton.getClapCount() + " BPM: " + skeleton.getBPM());
+            this.infoText.setText(/*"You are " + (int)(Math.round(skeleton.getRelaxFactor() * 100d) / 100d) + "% relaxed!*/ "Claps: " + skeleton.getClapCount() + " BPM: " + skeleton.getBPM());
         }
     }
 

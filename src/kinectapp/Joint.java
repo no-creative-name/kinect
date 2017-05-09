@@ -4,11 +4,11 @@ package kinectapp;
 
 public class Joint {
     
-    public int id;
+    private int id;
     
-    double filteredOutputX;
-    double filteredOutputY;
-    double filteredOutputZ;
+    public double filteredOutputX;
+    public double filteredOutputY;
+    public double filteredOutputZ;
     
     private double x;
     private double y;
@@ -40,7 +40,10 @@ public class Joint {
         
     }
         
-    
+    public int getId()
+    {
+        return this.id;
+    }
     
     public double getX()
     {

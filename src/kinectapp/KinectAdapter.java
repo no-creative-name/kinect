@@ -4,25 +4,20 @@ package kinectapp;
 
 import edu.ufl.digitalworlds.j4k.J4KSDK; 
 import edu.ufl.digitalworlds.j4k.Skeleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class KinectAdapter extends J4KSDK{
    
-    //Skeleton currentSkeleton;
-    double[][][] coordinates;
-    double[][][] emptyCoordinates;
-    public boolean[] whichSkeletonsTracked;
-    public static boolean skeletonDataAvailable = false;
-    public static long skeletonDataCounter = 0;
-    static long oldSkeletonDataCounter = 0;
     public static boolean skeletonLost = true;
-    public int skeletonCount;
-    //List<Skeleton> existingSkeletons;
+    public static boolean skeletonDataAvailable = false;
+    
+    private double[][][] coordinates;
+    private double[][][] emptyCoordinates;
+    private boolean[] whichSkeletonsTracked;
+    private static long skeletonDataCounter = 0;
+    private static long oldSkeletonDataCounter = 0;
+    private int skeletonCount;
     
     public KinectAdapter () {
-        //this.currentSkeleton = new Skeleton();
         this.coordinates = new double[6][25][3];
         this.emptyCoordinates = new double[6][25][3];
         
@@ -37,7 +32,6 @@ public class KinectAdapter extends J4KSDK{
         
         this.whichSkeletonsTracked = new boolean[6];
         this.skeletonCount = 0;
-        //this.existingSkeletons = new ArrayList<Skeleton>(6);
         this.startKinect();
     }
     
@@ -75,20 +69,6 @@ public class KinectAdapter extends J4KSDK{
         skeletonNumber = 0;
     }
     
-    public int getCountOfExistingSkeletons () {
-        
-        int internalSkeletonCount = 0;
-        
-        for (boolean isTracked : this.whichSkeletonsTracked) {
-            if (isTracked) {
-                internalSkeletonCount++;
-            }
-        }
-        
-        this.skeletonCount = internalSkeletonCount;
-        return skeletonCount;
-    }
-
     @Override
     public void onColorFrameEvent(byte[] color_frame) {
         
@@ -103,7 +83,6 @@ public class KinectAdapter extends J4KSDK{
         
         oldSkeletonDataCounter = skeletonDataCounter;
         
-        
     }
 
     @Override
@@ -111,6 +90,19 @@ public class KinectAdapter extends J4KSDK{
 
     }   
     
+    public int getCountOfExistingSkeletons () {
+        
+        int internalSkeletonCount = 0;
+        
+        for (boolean isTracked : this.whichSkeletonsTracked) {
+            if (isTracked) {
+                internalSkeletonCount++;
+            }
+        }
+        
+        this.skeletonCount = internalSkeletonCount;
+        return skeletonCount;
+    }
     
     public double[][][] getCurrentSkeletonCoordinates() {
         

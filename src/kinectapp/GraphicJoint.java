@@ -35,7 +35,7 @@ public class GraphicJoint {
         
         this.joint = joint;
         
-        this.id = joint.id;
+        this.id = joint.getId();
         
         this.currentSpeed = joint.getCurrentSpeed();
         
