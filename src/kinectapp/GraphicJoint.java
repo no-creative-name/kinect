@@ -25,8 +25,8 @@ public class GraphicJoint {
     
     public GraphicJoint (Joint joint) {
         
-        double jointX = (joint.getFilteredX()+1)*500;
-        double jointY = (joint.getFilteredY()+1)*500-200;
+        double jointX = (joint.getFilteredX()+1)*KinectApp.WINDOW_WIDTH*0.83/2;
+        double jointY = (joint.getFilteredY()+1)*KinectApp.WINDOW_HEIGHT/2-200;
         double jointZ = 2-joint.getFilteredZ();
         
         this.x = (int)jointX;

@@ -18,7 +18,13 @@ public class SkeletonService {
         
     }
     
+    public boolean isSkeletonLost () {
+        return kinectAdapter.isSkeletonLost();
+    }
     
+    public boolean isSkeletonDataAvailable () {
+        return kinectAdapter.isSkeletonDataAvailable();
+    }
     
     public List<Skeleton> getAllSkeletons () {
         
@@ -48,7 +54,7 @@ public class SkeletonService {
         
         this.skeletonsAvailable = true;
         
-        if(KinectAdapter.skeletonDataAvailable) {
+        if(this.isSkeletonDataAvailable()) {
         for (int skeletonId = 0; skeletonId < 1; skeletonId++) {
             if (this.getSkeletonBySkeletonId(skeletonId) == null) {
                 Skeleton skeleton = new Skeleton(kinectAdapter.getCurrentSkeletonCoordinates()[skeletonId],skeletonId);

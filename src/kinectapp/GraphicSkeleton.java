@@ -17,7 +17,8 @@ public class GraphicSkeleton extends JPanel {
     private double relaxFactor;
     private int iterationCount;
     private int clapCount;
-    private int BPM;
+    private double BPM;
+    private List timesBetweenClaps;
     
     public GraphicSkeleton (Skeleton skeleton) {
         
@@ -47,7 +48,7 @@ public class GraphicSkeleton extends JPanel {
         
     }
     
-    public int getBPM () {
+    public double getBPM () {
         
         return this.BPM;        
         
@@ -56,6 +57,16 @@ public class GraphicSkeleton extends JPanel {
     public double getRelaxFactor () {
         
         return this.relaxFactor;        
+        
+    }
+    
+    public List getTimesBetweenClaps () {
+        return this.timesBetweenClaps;
+    }
+    
+    public void resetBPMCounter () {
+        
+        this.skeleton.resetBPMCounter();
         
     }
     
@@ -84,6 +95,7 @@ public class GraphicSkeleton extends JPanel {
         this.relaxFactor = skeleton.getRelaxFactor();
         this.clapCount = skeleton.getClapCount();
         this.BPM = skeleton.getBPM();
+        this.timesBetweenClaps = skeleton.getTimesBetweenClaps();
         
     }
 

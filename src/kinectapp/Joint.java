@@ -26,6 +26,7 @@ public class Joint {
     private int filterIdx = 0;
     private double currentSpeed = 0;
     
+    
     public Joint (int id, double x, double y, double z) {
         
         this.id = id;
@@ -106,9 +107,9 @@ public class Joint {
         double ySpeed = (this.filteredOutputY-this.prevFilteredOutputY);
         double zSpeed = (this.filteredOutputZ-this.prevFilteredOutputZ);
         
-        double totalSpeed = Math.sqrt(Math.pow(Math.sqrt(Math.pow(xSpeed, 2)+Math.pow(ySpeed, 2)),2)+Math.pow(zSpeed, 2));
-        
+        double totalSpeed = Math.sqrt(Math.pow(Math.sqrt(Math.pow(xSpeed, 2)+Math.pow(ySpeed, 2)),2)+Math.pow(zSpeed, 2))/(double)(KinectAdapter.timeDiff)*1000;
         this.currentSpeed = totalSpeed*1000;
+        
         
     }
     
@@ -124,6 +125,13 @@ public class Joint {
         
         applyFilter();
         calculateCurrentJointSpeed();
+        
+        /*if (this.id == JointNames.HAND_RIGHT && this.currentSpeed < 0.15) {
+            System.out.println("Ruhe");
+        }
+        else if (this.id == JointNames.HAND_RIGHT) {
+            System.out.println("");
+        }*/
         
         this.prevFilteredOutputX = this.filteredOutputX;
         this.prevFilteredOutputY = this.filteredOutputY;

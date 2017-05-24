@@ -4,8 +4,6 @@ package kinectapp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class Skeleton {
@@ -16,17 +14,17 @@ public class Skeleton {
     private boolean hasClapped;
     private int clapCounter;
     private int mistakeCounter;
-    private int BPM;
-    
-    private final int FILTER_SIZE = 3;
-    private int BPMFilter[] = new int[10];
-    private int filteredBPM;
-    private int filterIdx = 0;
     
     private final double clapMistakeAllowanceRate = 0.2;
     private long prevClapTime;
     private long currentClapTime;
-    private List tapDifferences = new ArrayList<Double>();
+    private List timesBetweenClaps = new ArrayList<Double>();
+    
+    private double BPM;
+    private double BPMFilter[] = new double[10];
+    private final int FILTER_SIZE = 3;
+    private double filteredBPM;
+    private int filterIdx = 0;
     
     public Skeleton (double[][] currentSkeletonCoordinates, int id) {
         
@@ -56,13 +54,18 @@ public class Skeleton {
         
     }
     
-    public int getBPM () {
+    public double getBPM () {
         
         return this.filteredBPM;        
         
     }
     
-        // a to b
+    public List getTimesBetweenClaps () {
+        return this.timesBetweenClaps;
+    }
+
+    
+    
     public double[] getVectorBetween (int a, int b) {
         
         double x = (this.joints.get(b).filteredOutputX-this.joints.get(a).filteredOutputX);
@@ -147,7 +150,7 @@ public class Skeleton {
         
     public boolean isCurrentlyClapping () {
         
-        if (this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) < 0.2
+        if (this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) < 0.15
          && this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) != 0 ) 
         {
             return true;
@@ -196,21 +199,23 @@ public class Skeleton {
             {
                 
                 if(this.prevClapTime != 0) {
-                    this.currentClapTime = System.currentTimeMillis();
-                    this.tapDifferences.add((this.currentClapTime-this.prevClapTime));
                     
-                    if(this.clapsAreToBeReset()) {
-                        System.out.println("RESET");
-                        this.BPM = 0;
-                        this.tapDifferences.clear();
-                        this.clapCounter = 0;
-                        this.prevClapTime = this.currentClapTime;
+                    this.currentClapTime = System.currentTimeMillis();
+                    
+                    if (this.currentClapTime-this.prevClapTime > 100) {
+                        this.timesBetweenClaps.add((this.currentClapTime-this.prevClapTime));
+                    
+                        if(this.hasMadeTooManyMistakes()) {
+                            this.resetBPMCounter();
+                            this.prevClapTime = this.currentClapTime;
+                        }
+                        else {
+                            this.prevClapTime = this.currentClapTime;
+                            this.clapCounter++;
+                            this.calculateBPM();
+                        }
                     }
-                    else {
-                        this.prevClapTime = this.currentClapTime;
-                        this.clapCounter++;
-                        this.calculateBPM();
-                    }
+                    
                     
                 }
                 else {
@@ -222,20 +227,15 @@ public class Skeleton {
             }
     }
     
-    private boolean clapsAreToBeReset () {
-        if (this.hasMadeTooManyMistakes()) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    
-    private boolean hasMadeTooManyMistakes() {
+    private boolean hasMadeTooManyMistakes () {
         
-        
-        if(this.tapDifferences.size() > 3 && 
-           Math.abs((long)this.tapDifferences.get(clapCounter-1) - (long)this.tapDifferences.get(clapCounter-2)) > (60000/this.BPM)*this.clapMistakeAllowanceRate)
+        /*if(this.tapDifferences.size() > 3 && 
+           (long)this.tapDifferences.get(clapCounter-1) - (long)this.tapDifferences.get(clapCounter-2) < -(60000/this.BPM)*0.5)
+        {
+            System.out.println("ERROR");
+        }*/
+        if(this.timesBetweenClaps.size() > 3 && 
+           Math.abs((long)this.timesBetweenClaps.get(clapCounter-1) - (long)this.timesBetweenClaps.get(clapCounter-2)) > (60000/this.BPM)*this.clapMistakeAllowanceRate)
         {
             this.mistakeCounter++;
         }
@@ -256,21 +256,29 @@ public class Skeleton {
         
     }
     
+    private boolean isUserWantingToResetClaps () {
+        if(this.joints.get(JointNames.HAND_RIGHT).getFilteredY() < this.joints.get(JointNames.HEAD).getFilteredY()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
     private void calculateBPM () {
         
         long sum = 0;
         
-        for (int i = 0; i < tapDifferences.size(); i++) {
-            sum += (long)tapDifferences.get(i);
+        for (int i = 0; i < timesBetweenClaps.size(); i++) {
+            sum += (long)timesBetweenClaps.get(i);
         }
         
-        BPM =  (int)(
-                1/(double)(sum / tapDifferences.size()) 
+        BPM =  (
+                1/(double)(sum / timesBetweenClaps.size()) 
                 * 
                 60000
                 );
         
-        //System.out.println(tapDifferences);
     }
     
     private void applyBPMFilter () {
@@ -288,9 +296,13 @@ public class Skeleton {
       
     }
     
-    private void resetBPMCounter () {
-        this.tapDifferences.clear();
+    
+    
+    public void resetBPMCounter () {
+        this.timesBetweenClaps.clear();
         this.BPM = 0;
+        this.clapCounter = 0;
+        this.prevClapTime = 0;
         Arrays.fill(BPMFilter, 0);
     }
     
@@ -298,7 +310,7 @@ public class Skeleton {
         
         this.updateWholeBody(currentSkeletonCoordinates);
         
-        if(this.joints.get(JointNames.HAND_RIGHT).getFilteredY() < this.joints.get(JointNames.HEAD).getFilteredY()) {
+        if (this.isUserWantingToResetClaps()) {
             this.resetBPMCounter();
         }
         

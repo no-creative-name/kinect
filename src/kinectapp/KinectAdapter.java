@@ -7,15 +7,18 @@ import edu.ufl.digitalworlds.j4k.Skeleton;
 
 public class KinectAdapter extends J4KSDK{
    
-    public static boolean skeletonLost = true;
-    public static boolean skeletonDataAvailable = false;
+    private boolean skeletonLost = true;
+    private boolean skeletonDataAvailable = false;
+    public static long timeDiff;
     
     private double[][][] coordinates;
     private double[][][] emptyCoordinates;
     private boolean[] whichSkeletonsTracked;
-    private static long skeletonDataCounter = 0;
-    private static long oldSkeletonDataCounter = 0;
+    private long skeletonDataCounter = 0;
+    private long oldSkeletonDataCounter = 0;
     private int skeletonCount;
+    
+    private long prevTime; 
     
     public KinectAdapter () {
         this.coordinates = new double[6][25][3];
@@ -35,6 +38,18 @@ public class KinectAdapter extends J4KSDK{
         this.startKinect();
     }
     
+    
+    
+    public boolean isSkeletonLost () {
+        return this.skeletonLost;
+    }
+    
+    public boolean isSkeletonDataAvailable () {
+        return this.skeletonDataAvailable;
+    }
+    
+    
+    
     public void startKinect () {
         
         this.start(J4KSDK.COLOR|J4KSDK.DEPTH|J4KSDK.SKELETON);
@@ -49,9 +64,12 @@ public class KinectAdapter extends J4KSDK{
     
     @Override
     public void onSkeletonFrameEvent(boolean[] skeleton_tracked, float[] positions, float[] orientations, byte[] joint_status) {
+        
+        long time = System.currentTimeMillis();
+        timeDiff = time-prevTime;
 
         skeletonDataAvailable = true;
-        skeletonDataCounter++;
+        this.skeletonDataCounter++;
         this.whichSkeletonsTracked = skeleton_tracked;
         int skeletonNumber = 0;
         
@@ -67,13 +85,14 @@ public class KinectAdapter extends J4KSDK{
             }
         }
         skeletonNumber = 0;
+        
+        prevTime = time;
     }
     
     @Override
     public void onColorFrameEvent(byte[] color_frame) {
         
-        
-        if (skeletonDataCounter > oldSkeletonDataCounter) {
+        if (this.skeletonDataCounter > this.oldSkeletonDataCounter) {
             skeletonLost = false;
         }
         
@@ -81,7 +100,7 @@ public class KinectAdapter extends J4KSDK{
             skeletonLost = true;
         }
         
-        oldSkeletonDataCounter = skeletonDataCounter;
+        this.oldSkeletonDataCounter = this.skeletonDataCounter;
         
     }
 

@@ -1,2 +1,5 @@
 /dist/
 /nbproject/private/
+/lib/
+/src/songs/
+/build/
