@@ -6,13 +6,17 @@ import java.util.List;
 
 public class SkeletonService {
    
+    private Factory factory;
+    
     List <Skeleton> skeletons;
     KinectAdapter kinectAdapter;
     public boolean skeletonsAvailable;
     
-    public SkeletonService () {
+    public SkeletonService (Factory factory) {
         
-        this.kinectAdapter = new KinectAdapter();
+        this.factory = factory;
+        
+        this.kinectAdapter = new KinectAdapter(this.factory);
         this.skeletonsAvailable = false;
         this.skeletons = new ArrayList<Skeleton>();
         
@@ -57,7 +61,7 @@ public class SkeletonService {
         if(this.isSkeletonDataAvailable()) {
         for (int skeletonId = 0; skeletonId < 1; skeletonId++) {
             if (this.getSkeletonBySkeletonId(skeletonId) == null) {
-                Skeleton skeleton = new Skeleton(kinectAdapter.getCurrentSkeletonCoordinates()[skeletonId],skeletonId);
+                Skeleton skeleton = new Skeleton(this.factory, kinectAdapter.getCurrentSkeletonCoordinates()[skeletonId],skeletonId);
                 this.skeletons.add(skeleton);
             }
             else {

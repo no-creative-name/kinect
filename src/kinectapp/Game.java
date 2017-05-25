@@ -32,6 +32,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 public class Game implements ActionListener {
     
+    private Factory factory;
+    
     private static final Object[][] SONGS = { 
         {"No Roots", 116},
         {"Mas Que Nada", 100},
@@ -43,18 +45,10 @@ public class Game implements ActionListener {
     };
     
     // BPM to match and number of claps to match it
-    public static double masterBPM = (Integer)SONGS[0][1];
-    public static int masterClaps = 3/*(int)(Math.random()*32)+1*/;
     
     // User's results
-    public static double userBPM;
-    public static int userClaps;
-    public static List userTimesBetweenClaps = new ArrayList<Double>();
-    public static double BPMDeviation;
     
-    public static boolean onEasyMode = false;
-    public static boolean onGameOver = false;
-    public static boolean onPlayAgain = false;
+private boolean onPlayAgain = false;
     
     private Results resultsPanel;
     
@@ -65,37 +59,19 @@ public class Game implements ActionListener {
     private boolean songIsPlaying = false;
     private AudioStream myStream;
      
-    Game(JFrame f) {
+    Game(Factory factory, JFrame f) {
+        
+        this.factory = factory;
+        
         showSetup(f);
-        resultsPanel = new Results();
     }
     
-   
-    public static boolean isRunning (GraphicSkeleton skeleton) {
-        if(skeleton.getClapCount() < masterClaps && !onGameOver)
-        {
-            return true;
-        }
-        else 
-        {
-            return false;
-        }
-    }
     
-    public static boolean isToBeOver (GraphicSkeleton skeleton) {
-        if(skeleton.getClapCount() == masterClaps && !onGameOver)
-        {
-            return true;
-        }
-        else 
-        {
-            return false;
-        }
-    }
     
     private void showSetup(JFrame frame) {
         
-        masterBPM = (Integer)SONGS[0][1];
+        factory.setMasterBPM((Integer)SONGS[0][1]);
+        factory.setMasterClaps(3);
         
         songNames = new String[SONGS.length];
         
@@ -122,7 +98,7 @@ public class Game implements ActionListener {
         controls.add(playButton);
        //JTextField masterBPMField = new JTextField("" + this.masterBPM);
         //controls.add(masterBPMField);
-        JTextField maxClapsField = new JTextField("" + this.masterClaps);
+        JTextField maxClapsField = new JTextField("" + factory.getMasterClaps());
         controls.add(maxClapsField);
         JCheckBox easyModeBox = new JCheckBox();
         controls.add(easyModeBox);
@@ -141,25 +117,26 @@ public class Game implements ActionListener {
         }*/
         
         try {
-            masterClaps = Integer.parseInt(maxClapsField.getText());   
+            factory.setMasterClaps(Integer.parseInt(maxClapsField.getText()));   
         }
         catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Number of claps invalid. Please try again!");
             this.showSetup(frame);
         }
         
-        onEasyMode = easyModeBox.isSelected();
+        factory.setIsOnEasyMode(easyModeBox.isSelected());
         
         }
     
     public void showResults () {
         
-        BPMDeviation = Math.round(Math.abs((masterBPM - userBPM) / masterBPM * 100)*100.0)/100.0;
+        factory.setBPMDeviation(Math.round(Math.abs((factory.getMasterBPM() - factory.getUserBPMResult()) / factory.getMasterBPM() * 100)*100.0)/100.0);
         
+        resultsPanel = new Results(this.factory);
         this.setupChart(resultsPanel);
         
         JLabel resultText = new JLabel(
-                "You've reached a BPM of " + Math.round(userBPM*100.0)/100.0 + ", that's a deviation of " + Math.round(BPMDeviation*100.0)/100.0 + "%! Want to play again?"
+                "You've reached a BPM of " + Math.round(factory.getUserBPMResult()*100.0)/100.0 + ", that's a deviation of " + Math.round(factory.getBPMDeviation()*100.0)/100.0 + "%! Want to play again?"
         );
         resultText.setFont(new Font("Roboto", Font.BOLD, 30));
         
@@ -181,7 +158,7 @@ public class Game implements ActionListener {
         if (e.getSource() == songList) {
             soundSource = "src/songs/"+songList.getSelectedItem().toString().concat(".wav");
             System.out.println(songList.getSelectedIndex());
-            masterBPM = (Integer)SONGS[songList.getSelectedIndex()][1];
+            factory.setMasterBPM((Integer)SONGS[songList.getSelectedIndex()][1]);
         }
         if (e.getSource() == playButton) {
             if (songIsPlaying) {
@@ -226,8 +203,8 @@ public class Game implements ActionListener {
     
     public void setupChart (JPanel panel) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        for (int i = 0; i < userTimesBetweenClaps.size(); i++) {
-            dataset.setValue((long)userTimesBetweenClaps.get(i)-(60000/masterBPM),"", "Clap"+i+"");
+        for (int i = 0; i < factory.getUserTimesBetweenClaps().size(); i++) {
+            dataset.setValue((long)factory.getUserTimesBetweenClaps().get(i)-(60000/factory.getMasterBPM()),"", "Clap"+i+"");
         }
         JFreeChart chart = ChartFactory.createBarChart("","","", dataset, PlotOrientation.VERTICAL, false, false, false);
         CategoryPlot catPlot = chart.getCategoryPlot();

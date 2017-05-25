@@ -5,17 +5,17 @@ import javax.swing.JFrame;
 
 public class KinectApp {
 
-   
+    private Factory factory;
     public boolean initiated = false;
     public GraphicsEngine graphicsEngine;
-    public static final int WINDOW_WIDTH = 1920;
-    public static final int WINDOW_HEIGHT = 1080;
     
-    
+    public KinectApp (Factory factory) {
+        this.factory = factory;
+    }
 
     public void init (JFrame mainFrame) {
         
-        this.graphicsEngine = new GraphicsEngine(mainFrame);
+        this.graphicsEngine = new GraphicsEngine(mainFrame, this.factory);
         
     }
     
@@ -30,9 +30,9 @@ public class KinectApp {
         
         JFrame mainFrame = new JFrame("BrainBeat");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setSize(WINDOW_WIDTH,WINDOW_HEIGHT);
+        mainFrame.setSize(factory.getWindowWidth(),factory.getWindowHeight());
             
-        Game game = new Game(mainFrame);
+        Game game = new Game(factory, mainFrame);
         
         if(!this.initiated) {
             init(mainFrame);
@@ -46,7 +46,7 @@ public class KinectApp {
         
         game.stopSong();
         
-        while(!Game.onGameOver) {
+        while(!factory.isGameOver()) {
             update();
         }
         
@@ -54,7 +54,7 @@ public class KinectApp {
         game.showResults();
         
         /*if(Game.onPlayAgain) {
-            Game.onGameOver = false;
+            factory.setIsGameOver(false);
             mainFrame.setVisible(false);
             startGame();
         }
@@ -72,7 +72,8 @@ public class KinectApp {
     
     public static void main(String[] args) {
 
-        KinectApp app = new KinectApp();
+        Factory factory = new ClapGameFactory();
+        KinectApp app = new KinectApp(factory);
         app.startGame();
         
     }

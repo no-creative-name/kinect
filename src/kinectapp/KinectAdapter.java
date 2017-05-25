@@ -7,9 +7,10 @@ import edu.ufl.digitalworlds.j4k.Skeleton;
 
 public class KinectAdapter extends J4KSDK{
    
+    private Factory factory;
+    
     private boolean skeletonLost = true;
     private boolean skeletonDataAvailable = false;
-    public static long timeDiff;
     
     private double[][][] coordinates;
     private double[][][] emptyCoordinates;
@@ -20,7 +21,10 @@ public class KinectAdapter extends J4KSDK{
     
     private long prevTime; 
     
-    public KinectAdapter () {
+    public KinectAdapter (Factory factory) {
+        
+        this.factory = factory;
+        
         this.coordinates = new double[6][25][3];
         this.emptyCoordinates = new double[6][25][3];
         
@@ -65,8 +69,7 @@ public class KinectAdapter extends J4KSDK{
     @Override
     public void onSkeletonFrameEvent(boolean[] skeleton_tracked, float[] positions, float[] orientations, byte[] joint_status) {
         
-        long time = System.currentTimeMillis();
-        timeDiff = time-prevTime;
+        factory.getFrameRateManager().startFrameDurationMeasurement();
 
         skeletonDataAvailable = true;
         this.skeletonDataCounter++;
@@ -86,7 +89,8 @@ public class KinectAdapter extends J4KSDK{
         }
         skeletonNumber = 0;
         
-        prevTime = time;
+        factory.getFrameRateManager().stopFrameDurationMeasurement();
+        //prevTime = time;
     }
     
     @Override

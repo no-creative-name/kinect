@@ -8,6 +8,8 @@ import java.util.List;
 
 public class Skeleton {
     
+    private Factory factory;
+    
     private List<Joint> joints;
     private int id;
     
@@ -26,7 +28,9 @@ public class Skeleton {
     private double filteredBPM;
     private int filterIdx = 0;
     
-    public Skeleton (double[][] currentSkeletonCoordinates, int id) {
+    public Skeleton (Factory factory, double[][] currentSkeletonCoordinates, int id) {
+        
+        this.factory = factory;
         
         this.joints = new ArrayList<Joint>();
         this.joints = createJoints(currentSkeletonCoordinates);
@@ -174,7 +178,7 @@ public class Skeleton {
     public void addWholeBody (double[][] currentSkeletonCoordinates) {
        
         for (int id = 0; id < 25; id++) {
-            Joint joint = new Joint(id,currentSkeletonCoordinates[id][0],currentSkeletonCoordinates[id][1],currentSkeletonCoordinates[id][2]);
+            Joint joint = new Joint(this.factory, id,currentSkeletonCoordinates[id][0],currentSkeletonCoordinates[id][1],currentSkeletonCoordinates[id][2]);
             this.joints.add(joint);
         }
     } 

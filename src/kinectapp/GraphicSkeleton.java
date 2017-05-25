@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 
 public class GraphicSkeleton extends JPanel {
     
+    private Factory factory;
+    
     private List<GraphicJoint> joints;
     private Skeleton skeleton;
     private int skeletonId;
@@ -20,7 +22,9 @@ public class GraphicSkeleton extends JPanel {
     private double BPM;
     private List timesBetweenClaps;
     
-    public GraphicSkeleton (Skeleton skeleton) {
+    public GraphicSkeleton (Factory factory, Skeleton skeleton) {
+        
+        this.factory = factory;
         
         joints = new ArrayList<GraphicJoint>(25);
         this.skeleton = skeleton;
@@ -77,7 +81,7 @@ public class GraphicSkeleton extends JPanel {
         this.iterationCount = 0;
         
         for (Joint joint: this.skeleton.getJoints()) {
-            this.joints.add(iterationCount, GraphicJoint.fromJoint(joint));
+            this.joints.add(iterationCount, GraphicJoint.fromJoint(factory, joint));
             iterationCount++;
         }
         
@@ -88,7 +92,7 @@ public class GraphicSkeleton extends JPanel {
         this.iterationCount = 0;
         
         for (Joint joint: this.skeleton.getJoints()) {
-            this.joints.set(iterationCount, GraphicJoint.fromJoint(joint));
+            this.joints.set(iterationCount, GraphicJoint.fromJoint(factory, joint));
             iterationCount++;
         }
         

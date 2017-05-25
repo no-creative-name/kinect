@@ -17,6 +17,8 @@ import javax.swing.Timer;
 
 public class GraphicsEngine extends JPanel{
     
+    private Factory factory;
+    
     private SkeletonService skeletonService;
     private List<GraphicSkeleton> graphicSkeletons;
     private Font defaultFont = new Font("Roboto", Font.PLAIN, 40);
@@ -25,14 +27,16 @@ public class GraphicsEngine extends JPanel{
     private boolean tick = false;
     private Timer timer;
     
-    public GraphicsEngine (JFrame container) {
+    public GraphicsEngine (JFrame container, Factory factory) {
+        
+        this.factory = factory;
         
         this.setLayout(new BorderLayout());
         
-        this.infoText = "Master BPM: " + Game.masterBPM + "      Max number of claps: " + Game.masterClaps;
+        this.infoText = "Master BPM: " + factory.getMasterBPM() + "      Max number of claps: " + factory.getMasterClaps();
         
 
-        if(Game.onEasyMode) {
+        if(factory.isOnEasyMode()) {
             this.infoText = this.infoText.concat("      Your BPM: " + 0);
         }
 
@@ -42,10 +46,10 @@ public class GraphicsEngine extends JPanel{
         container.add(this);
 
 
-        this.skeletonService = new SkeletonService();
+        this.skeletonService = new SkeletonService(this.factory);
         this.graphicSkeletons = new ArrayList<GraphicSkeleton>();
         
-        timer = new Timer(60000/(int)Game.masterBPM/2, new ActionListener() {
+        timer = new Timer(60000/(int)factory.getMasterBPM()/2, new ActionListener() {
                                              public void actionPerformed( ActionEvent e ) {
                                                  if(!tick) {
                                                      tick = true;
@@ -55,7 +59,7 @@ public class GraphicsEngine extends JPanel{
                                                  }
                                              }
                                            });
-        timer.setInitialDelay(60000/(int)Game.masterBPM/2);
+        timer.setInitialDelay(60000/(int)factory.getMasterBPM()/2);
         timer.start();
         
        
@@ -63,10 +67,10 @@ public class GraphicsEngine extends JPanel{
     
     public void reset (JFrame container) {
         
-        this.infoText = "Master BPM: " + Game.masterBPM + "      Max number of claps: " + Game.masterClaps;
+        this.infoText = "Master BPM: " + factory.getMasterBPM() + "      Max number of claps: " + factory.getMasterClaps();
         
 
-        if(Game.onEasyMode) {
+        if(factory.isOnEasyMode()) {
             this.infoText.concat("Your BPM: " + 0 + "      ");
         }
 
@@ -115,9 +119,9 @@ public class GraphicsEngine extends JPanel{
         
     }
     
-    private void createGraphicSkeletonFromSkeleton (Skeleton skeleton) {
+    private void createGraphicSkeletonFromSkeleton (Factory factory, Skeleton skeleton) {
         
-        GraphicSkeleton graphicSkeleton = new GraphicSkeleton(skeleton);
+        GraphicSkeleton graphicSkeleton = new GraphicSkeleton(factory, skeleton);
         this.graphicSkeletons.add(graphicSkeleton);
         
     }
@@ -133,7 +137,7 @@ public class GraphicsEngine extends JPanel{
                 joint.render(Color.red);
             }
             
-            /*if(Game.onEasyMode) {
+            /*if(factory.isOnEasyMode()) {
                 this.userResultText.setText("Your BPM: " + Math.round(skeleton.getBPM()*100.0)/100.0 + "      ");
             }*/
             
@@ -143,10 +147,10 @@ public class GraphicsEngine extends JPanel{
     @Override
     public void paintComponent (Graphics g) {
         
-        if (!skeletonService.isSkeletonLost() && Game.isRunning(this.graphicSkeletons.get(0))) 
+        if (!skeletonService.isSkeletonLost() && factory.isGameRunning(this.graphicSkeletons.get(0))) 
         {
             super.paintComponent(g);
-            if(Game.onEasyMode) {
+            if(factory.isOnEasyMode()) {
                 if(tick) {
                     g.setColor(Color.white);
                 }
@@ -159,27 +163,27 @@ public class GraphicsEngine extends JPanel{
             }
             
             
-            g.fillRect(0, 0, KinectApp.WINDOW_WIDTH, KinectApp.WINDOW_HEIGHT);
+            g.fillRect(0, 0, factory.getWindowWidth(), factory.getWindowHeight());
             
             this.renderJoints(g);
         }
-        else if (!skeletonService.isSkeletonLost() && Game.isToBeOver(this.graphicSkeletons.get(0))) 
+        else if (!skeletonService.isSkeletonLost() && factory.isGameToBeOver(this.graphicSkeletons.get(0))) 
         {
             
-            Game.userBPM = this.graphicSkeletons.get(0).getBPM();
-            Game.userClaps = this.graphicSkeletons.get(0).getClapCount();
+            factory.setUserBPMResult(this.graphicSkeletons.get(0).getBPM());
+            factory.setUserClaps(this.graphicSkeletons.get(0).getClapCount());
             
             for (int i = 0; i < this.graphicSkeletons.get(0).getTimesBetweenClaps().size(); i++) {  
-                Game.userTimesBetweenClaps.add(this.graphicSkeletons.get(0).getTimesBetweenClaps().get(i));
+                factory.addToUserTimesBetweenClaps((int)this.graphicSkeletons.get(0).getTimesBetweenClaps().get(i));
             }
 
-            Game.onGameOver = true;
+            factory.setIsGameOver(true);
             this.graphicSkeletons.get(0).resetBPMCounter();
         }
         else
         {
             
-            if(Game.onEasyMode) {
+            if(factory.isOnEasyMode()) {
                 if(tick) {
                     g.setColor(Color.white);
                 }
@@ -190,7 +194,7 @@ public class GraphicsEngine extends JPanel{
             else {
                 g.setColor(Color.white);
             }
-            g.fillRect(0, 0, KinectApp.WINDOW_WIDTH, KinectApp.WINDOW_HEIGHT);
+            g.fillRect(0, 0, factory.getWindowWidth(), factory.getWindowHeight());
            
         }
         
@@ -204,7 +208,7 @@ public class GraphicsEngine extends JPanel{
         
         for (Skeleton skeleton : this.skeletonService.getAllSkeletons()) {
             if(this.getGraphicSkeletonForSkeleton(skeleton) == null){
-                this.createGraphicSkeletonFromSkeleton(skeleton);
+                this.createGraphicSkeletonFromSkeleton(factory, skeleton);
             }
             else {
                 this.updateGraphicSkeleton(skeleton.getId());

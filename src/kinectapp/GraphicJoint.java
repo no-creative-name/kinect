@@ -7,6 +7,8 @@ import java.awt.Graphics;
 
 public class GraphicJoint {
     
+    private Factory factory;
+    
     private Graphics visualization;
     
     private Joint joint;
@@ -23,10 +25,12 @@ public class GraphicJoint {
     private double currentSpeed;
     
     
-    public GraphicJoint (Joint joint) {
+    public GraphicJoint (Factory factory, Joint joint) {
         
-        double jointX = (joint.getFilteredX()+1)*KinectApp.WINDOW_WIDTH*0.83/2;
-        double jointY = (joint.getFilteredY()+1)*KinectApp.WINDOW_HEIGHT/2-200;
+        this.factory = factory;
+        
+        double jointX = (joint.getFilteredX()+1)*factory.getWindowWidth()*0.83/2;
+        double jointY = (joint.getFilteredY()+1)*factory.getWindowHeight()/2-200;
         double jointZ = 2-joint.getFilteredZ();
         
         this.x = (int)jointX;
@@ -60,9 +64,9 @@ public class GraphicJoint {
         
     }
     
-    public static GraphicJoint fromJoint (Joint joint) {
+    public static GraphicJoint fromJoint (Factory factory, Joint joint) {
         
-        return new GraphicJoint(joint);
+        return new GraphicJoint(factory, joint);
         
     } 
     

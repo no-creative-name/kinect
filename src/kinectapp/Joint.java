@@ -4,6 +4,8 @@ package kinectapp;
 
 public class Joint {
     
+    private Factory factory;
+    
     private int id;
     
     public double filteredOutputX;
@@ -27,7 +29,9 @@ public class Joint {
     private double currentSpeed = 0;
     
     
-    public Joint (int id, double x, double y, double z) {
+    public Joint (Factory factory, int id, double x, double y, double z) {
+        
+        this.factory = factory;
         
         this.id = id;
         
@@ -107,7 +111,7 @@ public class Joint {
         double ySpeed = (this.filteredOutputY-this.prevFilteredOutputY);
         double zSpeed = (this.filteredOutputZ-this.prevFilteredOutputZ);
         
-        double totalSpeed = Math.sqrt(Math.pow(Math.sqrt(Math.pow(xSpeed, 2)+Math.pow(ySpeed, 2)),2)+Math.pow(zSpeed, 2))/(double)(KinectAdapter.timeDiff)*1000;
+        double totalSpeed = Math.sqrt(Math.pow(Math.sqrt(Math.pow(xSpeed, 2)+Math.pow(ySpeed, 2)),2)+Math.pow(zSpeed, 2))/(double)(factory.getFrameRateManager().getLastFrameDuration())*1000;
         this.currentSpeed = totalSpeed*1000;
         
         
