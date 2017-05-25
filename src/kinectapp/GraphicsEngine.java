@@ -18,6 +18,8 @@ import javax.swing.Timer;
 public class GraphicsEngine extends JPanel{
     
     private Factory factory;
+    private LevelManager levelManager;
+    private GameStateManager gameStateManager;
     
     private SkeletonService skeletonService;
     private List<GraphicSkeleton> graphicSkeletons;
@@ -30,13 +32,15 @@ public class GraphicsEngine extends JPanel{
     public GraphicsEngine (JFrame container, Factory factory) {
         
         this.factory = factory;
+        this.levelManager = factory.getLevelManager();
+        this.gameStateManager = factory.getGameStateManager();
         
         this.setLayout(new BorderLayout());
         
-        this.infoText = "Master BPM: " + factory.getMasterBPM() + "      Max number of claps: " + factory.getMasterClaps();
+        this.infoText = "Master BPM: " + this.levelManager.getCurrentLevel().song.BPM + "      Max number of claps: " + factory.getMasterClaps();
         
 
-        if(factory.isOnEasyMode()) {
+        if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
             this.infoText = this.infoText.concat("      Your BPM: " + 0);
         }
 
@@ -49,7 +53,7 @@ public class GraphicsEngine extends JPanel{
         this.skeletonService = new SkeletonService(this.factory);
         this.graphicSkeletons = new ArrayList<GraphicSkeleton>();
         
-        timer = new Timer(60000/(int)factory.getMasterBPM()/2, new ActionListener() {
+        timer = new Timer(60000/(int)this.levelManager.getCurrentLevel().song.BPM/2, new ActionListener() {
                                              public void actionPerformed( ActionEvent e ) {
                                                  if(!tick) {
                                                      tick = true;
@@ -59,7 +63,7 @@ public class GraphicsEngine extends JPanel{
                                                  }
                                              }
                                            });
-        timer.setInitialDelay(60000/(int)factory.getMasterBPM()/2);
+        timer.setInitialDelay(60000/(int)this.levelManager.getCurrentLevel().song.BPM/2);
         timer.start();
         
        
@@ -67,10 +71,10 @@ public class GraphicsEngine extends JPanel{
     
     public void reset (JFrame container) {
         
-        this.infoText = "Master BPM: " + factory.getMasterBPM() + "      Max number of claps: " + factory.getMasterClaps();
+        this.infoText = "Master BPM: " + this.levelManager.getCurrentLevel().song.BPM + "      Max number of claps: " + factory.getMasterClaps();
         
 
-        if(factory.isOnEasyMode()) {
+        if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
             this.infoText.concat("Your BPM: " + 0 + "      ");
         }
 
@@ -150,7 +154,7 @@ public class GraphicsEngine extends JPanel{
         if (!skeletonService.isSkeletonLost() && factory.isGameRunning(this.graphicSkeletons.get(0))) 
         {
             super.paintComponent(g);
-            if(factory.isOnEasyMode()) {
+            if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
                 if(tick) {
                     g.setColor(Color.white);
                 }
@@ -177,13 +181,13 @@ public class GraphicsEngine extends JPanel{
                 factory.addToUserTimesBetweenClaps((int)this.graphicSkeletons.get(0).getTimesBetweenClaps().get(i));
             }
 
-            factory.setIsGameOver(true);
+            this.gameStateManager.stopGame();
             this.graphicSkeletons.get(0).resetBPMCounter();
         }
         else
         {
             
-            if(factory.isOnEasyMode()) {
+            if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
                 if(tick) {
                     g.setColor(Color.white);
                 }

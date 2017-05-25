@@ -11,14 +11,7 @@ public interface Factory {
     public boolean isGameRunning (GraphicSkeleton skeleton);
     public boolean isGameToBeOver (GraphicSkeleton skeleton);
     
-    public void setIsOnEasyMode (boolean isOnEasyMode);
-    public boolean isOnEasyMode ();
     
-    public void setIsGameOver (boolean isGameOver);
-    public boolean isGameOver ();
-    
-    public int getMasterBPM ();
-    public void setMasterBPM (int BPM);
   
     public int getMasterClaps ();
     public void setMasterClaps (int claps);
@@ -39,4 +32,7 @@ public interface Factory {
     
     public FrameRateManager getFrameRateManager ();
     
+    public LevelManager getLevelManager ();
+    
+    public GameStateManager getGameStateManager ();
 }

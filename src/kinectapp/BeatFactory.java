@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ClapGameFactory implements Factory {
+public class BeatFactory implements Factory {
     
     private final int WINDOW_WIDTH = 1920;
     private final int WINDOW_HEIGHT = 1080;
     
-    private FrameRateManager frameRateManager;
-    private int masterBPM;
     private int masterClaps;
     
     private double userBPMResult;
@@ -22,6 +20,11 @@ public class ClapGameFactory implements Factory {
     
     private boolean isOnEasyMode;
     private boolean isGameOver;
+    
+    private FrameRateManager frameRateManager;
+    private LevelManager levelManager;
+    private SongManager songManager;
+    private GameStateManager gameStateManager;
     
     @Override
     public int getWindowWidth () {
@@ -55,33 +58,6 @@ public class ClapGameFactory implements Factory {
         }
     }
     
-    @Override
-    public void setIsOnEasyMode (boolean isOnEasyMode) {
-        this.isOnEasyMode = isOnEasyMode;
-    }
-    @Override
-    public boolean isOnEasyMode () {
-        return this.isOnEasyMode;
-    }
-    
-    @Override
-    public void setIsGameOver (boolean isGameOver) {
-        this.isGameOver = isGameOver;
-    }
-    @Override
-    public boolean isGameOver () {
-        return this.isGameOver;
-    }
-    
-    
-    @Override
-    public int getMasterBPM () {
-        return this.masterBPM;
-    }
-    @Override
-    public void setMasterBPM (int BPM) {
-        this.masterBPM = BPM;
-    }
     
     @Override
     public int getMasterClaps () {
@@ -140,6 +116,28 @@ public class ClapGameFactory implements Factory {
         }
         return this.frameRateManager;
     }
+    
+    @Override
+    public LevelManager getLevelManager() {
+        if (this.levelManager == null) {
+            this.levelManager = new BeatLevelManager(this.getSongManager());
+        }
+        return this.levelManager;
+    }
 
+    private SongManager getSongManager() {
+        if (this.songManager == null) {
+            this.songManager = new BeatSongManager();
+        }
+        return this.songManager;
+    }
+
+    @Override
+    public GameStateManager getGameStateManager() {
+        if (this.gameStateManager == null) {
+            this.gameStateManager = new BeatGameStateManager();
+        }
+        return this.gameStateManager;
+    }
     
 }

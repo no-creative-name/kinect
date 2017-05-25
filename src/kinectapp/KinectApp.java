@@ -6,11 +6,13 @@ import javax.swing.JFrame;
 public class KinectApp {
 
     private Factory factory;
+    private GameStateManager gameStateManager;
     public boolean initiated = false;
     public GraphicsEngine graphicsEngine;
     
     public KinectApp (Factory factory) {
         this.factory = factory;
+        this.gameStateManager = factory.getGameStateManager();
     }
 
     public void init (JFrame mainFrame) {
@@ -44,9 +46,10 @@ public class KinectApp {
         mainFrame.setVisible(true);
         this.initiated = true;
         
-        game.stopSong();
+        this.gameStateManager.startGame();
+        factory.getLevelManager().startCurrentLevel();
         
-        while(!factory.isGameOver()) {
+        while(this.gameStateManager.isRunning()) {
             update();
         }
         
@@ -72,7 +75,7 @@ public class KinectApp {
     
     public static void main(String[] args) {
 
-        Factory factory = new ClapGameFactory();
+        Factory factory = new BeatFactory();
         KinectApp app = new KinectApp(factory);
         app.startGame();
         

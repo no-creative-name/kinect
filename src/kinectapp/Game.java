@@ -25,43 +25,28 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 
 public class Game implements ActionListener {
     
     private Factory factory;
-    
-    private static final Object[][] SONGS = { 
-        {"No Roots", 116},
-        {"Mas Que Nada", 100},
-        {"Call On Me", 126},
-        {"E.T.", 75},
-        {"Happy", 160},
-        {"Applause", 140},
-        {"Warwick Avenue", 84} 
-    };
-    
-    // BPM to match and number of claps to match it
-    
-    // User's results
-    
-private boolean onPlayAgain = false;
+    private LevelManager levelManager;
+    private GameStateManager gameStateManager;
+
+    private boolean onPlayAgain = false;
     
     private Results resultsPanel;
     
-    private String[] songNames;
     private JComboBox songList;
     private JButton playButton;
-    private String soundSource = "src/songs/"+SONGS[0][0].toString().concat(".wav");;
-    private boolean songIsPlaying = false;
-    private AudioStream myStream;
+   
      
     Game(Factory factory, JFrame f) {
         
         this.factory = factory;
+        this.levelManager = factory.getLevelManager();
+        this.gameStateManager = factory.getGameStateManager();
         
         showSetup(f);
     }
@@ -70,14 +55,9 @@ private boolean onPlayAgain = false;
     
     private void showSetup(JFrame frame) {
         
-        factory.setMasterBPM((Integer)SONGS[0][1]);
+        this.levelManager.setCurrentLevel(0);
         factory.setMasterClaps(3);
         
-        songNames = new String[SONGS.length];
-        
-        for (int i = 0; i < SONGS.length; i++) {
-            songNames[i] = SONGS[i][0].toString();
-        }
         
         JPanel p = new JPanel(new BorderLayout(30,30));
         
@@ -89,10 +69,11 @@ private boolean onPlayAgain = false;
         p.add(labels, BorderLayout.WEST);
         
         JPanel controls = new JPanel(new GridLayout(0,1,2,2));
-        songList = new JComboBox(songNames);
+        songList = new JComboBox(this.levelManager.getAllLevels().toArray());
         songList.setSelectedIndex(0);
         songList.addActionListener(this);
         controls.add(songList);
+        
         playButton = new JButton("▶");
         playButton.addActionListener(this);
         controls.add(playButton);
@@ -124,13 +105,18 @@ private boolean onPlayAgain = false;
             this.showSetup(frame);
         }
         
-        factory.setIsOnEasyMode(easyModeBox.isSelected());
+        if(easyModeBox.isSelected()) {
+            this.gameStateManager.setDifficulty(DIFFICULTY.EASY);
+        }
+        else {
+            this.gameStateManager.setDifficulty(DIFFICULTY.NORMAL);
+        }
         
         }
     
     public void showResults () {
         
-        factory.setBPMDeviation(Math.round(Math.abs((factory.getMasterBPM() - factory.getUserBPMResult()) / factory.getMasterBPM() * 100)*100.0)/100.0);
+        factory.setBPMDeviation(Math.round(Math.abs((this.levelManager.getCurrentLevel().song.BPM - factory.getUserBPMResult()) / this.levelManager.getCurrentLevel().song.BPM * 100)*100.0)/100.0);
         
         resultsPanel = new Results(this.factory);
         this.setupChart(resultsPanel);
@@ -156,55 +142,25 @@ private boolean onPlayAgain = false;
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == songList) {
-            soundSource = "src/songs/"+songList.getSelectedItem().toString().concat(".wav");
-            System.out.println(songList.getSelectedIndex());
-            factory.setMasterBPM((Integer)SONGS[songList.getSelectedIndex()][1]);
+            Level selectedLevel = (Level)songList.getSelectedItem();
+            this.levelManager.setCurrentLevel(selectedLevel.id);
         }
         if (e.getSource() == playButton) {
-            if (songIsPlaying) {
-                stopSong();
-            }
-            myStream = playSong();
-            songIsPlaying = true;
+            this.playButtonPressed();
         }
             
     }
+    
+    public void playButtonPressed() {
+        this.levelManager.previewCurrentLevel();
+    }
         
     
-    
-    private AudioStream playSong () {
-        try {
-            // open the sound file as a Java input stream
-            InputStream in = new FileInputStream(soundSource);
-
-            // create an audiostream from the inputstream
-            AudioStream audioStream = new AudioStream(in);
-
-            // play the audio clip with the audioplayer class
-            AudioPlayer.player.start(audioStream);
-            
-            return audioStream;
-        }
-        catch (Exception e) {
-            System.out.println("no sound");
-        }
-        
-        return null;
-    }
-    
-    public void stopSong () {
-        try {
-            AudioPlayer.player.stop(myStream);
-        }
-        catch (Exception e) {
-            System.out.println("no sound");
-        }
-    }
     
     public void setupChart (JPanel panel) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (int i = 0; i < factory.getUserTimesBetweenClaps().size(); i++) {
-            dataset.setValue((long)factory.getUserTimesBetweenClaps().get(i)-(60000/factory.getMasterBPM()),"", "Clap"+i+"");
+            dataset.setValue((long)factory.getUserTimesBetweenClaps().get(i)-(60000/this.levelManager.getCurrentLevel().song.BPM),"", "Clap"+i+"");
         }
         JFreeChart chart = ChartFactory.createBarChart("","","", dataset, PlotOrientation.VERTICAL, false, false, false);
         CategoryPlot catPlot = chart.getCategoryPlot();
