@@ -7,7 +7,7 @@ public class Level {
     public int id;
     public Song song;
     
-    Level (String displayName, String songFileName, double BPM) {
+    public Level (String displayName, String songFileName, double BPM) {
         this.song = new Song(displayName, songFileName, BPM);
     }
     

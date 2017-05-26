@@ -1,8 +1,10 @@
 
-package kinectapp;
+package kinectapp.modules;
 
+import kinectapp.interfaces.SongManager;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import kinectapp.Song;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 

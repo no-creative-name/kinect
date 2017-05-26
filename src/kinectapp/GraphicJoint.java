@@ -29,8 +29,8 @@ public class GraphicJoint {
         
         this.factory = factory;
         
-        double jointX = (joint.getFilteredX()+1)*factory.getWindowWidth()*0.83/2;
-        double jointY = (joint.getFilteredY()+1)*factory.getWindowHeight()/2-200;
+        double jointX = (joint.getFilteredX()+1)*factory.getLayoutManager().getWindowWidth()*0.83/2;
+        double jointY = (joint.getFilteredY()+1)*factory.getLayoutManager().getWindowHeight()/2-200;
         double jointZ = 2-joint.getFilteredZ();
         
         this.x = (int)jointX;

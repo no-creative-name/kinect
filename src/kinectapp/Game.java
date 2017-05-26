@@ -1,16 +1,14 @@
 
 package kinectapp;
 
+import kinectapp.interfaces.GameStateManager;
+import kinectapp.interfaces.LevelManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -20,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import kinectapp.interfaces.ResultManager;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -33,6 +32,7 @@ public class Game implements ActionListener {
     private Factory factory;
     private LevelManager levelManager;
     private GameStateManager gameStateManager;
+    private ResultManager resultManager;
 
     private boolean onPlayAgain = false;
     
@@ -47,6 +47,7 @@ public class Game implements ActionListener {
         this.factory = factory;
         this.levelManager = factory.getLevelManager();
         this.gameStateManager = factory.getGameStateManager();
+        this.resultManager = factory.getResultManager();
         
         showSetup(f);
     }
@@ -116,13 +117,13 @@ public class Game implements ActionListener {
     
     public void showResults () {
         
-        factory.setBPMDeviation(Math.round(Math.abs((this.levelManager.getCurrentLevel().song.BPM - factory.getUserBPMResult()) / this.levelManager.getCurrentLevel().song.BPM * 100)*100.0)/100.0);
+        this.resultManager.setBPMDeviation(Math.round(Math.abs((this.levelManager.getCurrentLevel().song.BPM - this.resultManager.getUserBPM()) / this.levelManager.getCurrentLevel().song.BPM * 100)*100.0)/100.0);
         
         resultsPanel = new Results(this.factory);
         this.setupChart(resultsPanel);
         
         JLabel resultText = new JLabel(
-                "You've reached a BPM of " + Math.round(factory.getUserBPMResult()*100.0)/100.0 + ", that's a deviation of " + Math.round(factory.getBPMDeviation()*100.0)/100.0 + "%! Want to play again?"
+                "You've reached a BPM of " + Math.round(this.resultManager.getUserBPM()*100.0)/100.0 + ", that's a deviation of " + Math.round(this.resultManager.getBPMDeviation()*100.0)/100.0 + "%! Want to play again?"
         );
         resultText.setFont(new Font("Roboto", Font.BOLD, 30));
         
@@ -159,8 +160,8 @@ public class Game implements ActionListener {
     
     public void setupChart (JPanel panel) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        for (int i = 0; i < factory.getUserTimesBetweenClaps().size(); i++) {
-            dataset.setValue((long)factory.getUserTimesBetweenClaps().get(i)-(60000/this.levelManager.getCurrentLevel().song.BPM),"", "Clap"+i+"");
+        for (int i = 0; i < this.resultManager.getUserTimesBetweenClaps().size(); i++) {
+            dataset.setValue((long)this.resultManager.getUserTimesBetweenClaps().get(i)-(60000/this.levelManager.getCurrentLevel().song.BPM),"", "Clap "+(i+1)+"");
         }
         JFreeChart chart = ChartFactory.createBarChart("","","", dataset, PlotOrientation.VERTICAL, false, false, false);
         CategoryPlot catPlot = chart.getCategoryPlot();

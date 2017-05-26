@@ -1,5 +1,5 @@
 
-package kinectapp;
+package kinectapp.interfaces;
 
 
 public interface FrameRateManager {

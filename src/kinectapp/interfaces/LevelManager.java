@@ -1,7 +1,8 @@
 
-package kinectapp;
+package kinectapp.interfaces;
 
 import java.util.List;
+import kinectapp.Level;
 
 
 public interface LevelManager {

@@ -1,5 +1,8 @@
 
-package kinectapp;
+package kinectapp.modules;
+
+import kinectapp.interfaces.GameStateManager;
+import kinectapp.DIFFICULTY;
 
 
 public class BeatGameStateManager implements GameStateManager {

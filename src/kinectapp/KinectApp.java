@@ -1,6 +1,7 @@
 
 package kinectapp;
 
+import kinectapp.interfaces.GameStateManager;
 import javax.swing.JFrame;
 
 public class KinectApp {
@@ -32,7 +33,7 @@ public class KinectApp {
         
         JFrame mainFrame = new JFrame("BrainBeat");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setSize(factory.getWindowWidth(),factory.getWindowHeight());
+        mainFrame.setSize(factory.getLayoutManager().getWindowWidth(),factory.getLayoutManager().getWindowHeight());
             
         Game game = new Game(factory, mainFrame);
         
@@ -48,6 +49,7 @@ public class KinectApp {
         
         this.gameStateManager.startGame();
         factory.getLevelManager().startCurrentLevel();
+        
         
         while(this.gameStateManager.isRunning()) {
             update();

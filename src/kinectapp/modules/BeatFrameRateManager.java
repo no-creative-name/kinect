@@ -1,5 +1,7 @@
 
-package kinectapp;
+package kinectapp.modules;
+
+import kinectapp.interfaces.FrameRateManager;
 
 
 public class BeatFrameRateManager implements FrameRateManager{

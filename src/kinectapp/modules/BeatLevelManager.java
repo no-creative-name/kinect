@@ -1,8 +1,11 @@
 
-package kinectapp;
+package kinectapp.modules;
 
+import kinectapp.interfaces.LevelManager;
+import kinectapp.interfaces.SongManager;
 import java.util.ArrayList;
 import java.util.List;
+import kinectapp.Level;
 
 
 public class BeatLevelManager implements LevelManager{
@@ -11,7 +14,7 @@ public class BeatLevelManager implements LevelManager{
     private int currentLevelId;
     private SongManager songManager;
     
-    BeatLevelManager (SongManager songManager) {
+    public BeatLevelManager (SongManager songManager) {
         
         this.songManager = songManager;
         

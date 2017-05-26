@@ -1,5 +1,7 @@
 
-package kinectapp;
+package kinectapp.interfaces;
+
+import kinectapp.DIFFICULTY;
 
 
 public interface GameStateManager {

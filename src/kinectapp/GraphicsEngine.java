@@ -1,6 +1,8 @@
 
 package kinectapp;
 
+import kinectapp.interfaces.GameStateManager;
+import kinectapp.interfaces.LevelManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -13,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import kinectapp.interfaces.ResultManager;
 
 
 public class GraphicsEngine extends JPanel{
@@ -20,6 +23,7 @@ public class GraphicsEngine extends JPanel{
     private Factory factory;
     private LevelManager levelManager;
     private GameStateManager gameStateManager;
+    private ResultManager resultManager;
     
     private SkeletonService skeletonService;
     private List<GraphicSkeleton> graphicSkeletons;
@@ -34,6 +38,7 @@ public class GraphicsEngine extends JPanel{
         this.factory = factory;
         this.levelManager = factory.getLevelManager();
         this.gameStateManager = factory.getGameStateManager();
+        this.resultManager = factory.getResultManager();
         
         this.setLayout(new BorderLayout());
         
@@ -147,11 +152,15 @@ public class GraphicsEngine extends JPanel{
             
         }
     }
-
+    
     @Override
     public void paintComponent (Graphics g) {
         
-        if (!skeletonService.isSkeletonLost() && factory.isGameRunning(this.graphicSkeletons.get(0))) 
+        if ((!skeletonService.isSkeletonLost() && this.graphicSkeletons.get(0).getClapCount() >= this.factory.getMasterClaps())) {
+            this.gameStateManager.stopGame();
+        }
+        
+        if (!skeletonService.isSkeletonLost() && this.gameStateManager.isRunning()) 
         {
             super.paintComponent(g);
             if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
@@ -167,18 +176,20 @@ public class GraphicsEngine extends JPanel{
             }
             
             
-            g.fillRect(0, 0, factory.getWindowWidth(), factory.getWindowHeight());
+            g.fillRect(0, 0, factory.getLayoutManager().getWindowWidth(), factory.getLayoutManager().getWindowHeight());
             
             this.renderJoints(g);
         }
-        else if (!skeletonService.isSkeletonLost() && factory.isGameToBeOver(this.graphicSkeletons.get(0))) 
+        else if (!skeletonService.isSkeletonLost()) 
         {
             
-            factory.setUserBPMResult(this.graphicSkeletons.get(0).getBPM());
-            factory.setUserClaps(this.graphicSkeletons.get(0).getClapCount());
+            this.resultManager.setUserBPM(this.graphicSkeletons.get(0).getBPM());
+            this.resultManager.setUserClaps(this.graphicSkeletons.get(0).getClapCount());
             
             for (int i = 0; i < this.graphicSkeletons.get(0).getTimesBetweenClaps().size(); i++) {  
-                factory.addToUserTimesBetweenClaps((int)this.graphicSkeletons.get(0).getTimesBetweenClaps().get(i));
+                List x = this.resultManager.getUserTimesBetweenClaps();
+                x.add(this.graphicSkeletons.get(0).getTimesBetweenClaps().get(i));
+                this.resultManager.setUserTimesBetweenClaps(x);
             }
 
             this.gameStateManager.stopGame();
@@ -198,7 +209,7 @@ public class GraphicsEngine extends JPanel{
             else {
                 g.setColor(Color.white);
             }
-            g.fillRect(0, 0, factory.getWindowWidth(), factory.getWindowHeight());
+            g.fillRect(0, 0, factory.getLayoutManager().getWindowWidth(), factory.getLayoutManager().getWindowHeight());
            
         }
         

@@ -1,64 +1,32 @@
 
 package kinectapp;
 
-import java.util.ArrayList;
-import java.util.List;
+import kinectapp.modules.BeatGameStateManager;
+import kinectapp.interfaces.GameStateManager;
+import kinectapp.modules.BeatFrameRateManager;
+import kinectapp.interfaces.FrameRateManager;
+import kinectapp.interfaces.LevelManager;
+import kinectapp.modules.BeatLevelManager;
+import kinectapp.modules.BeatSongManager;
+import kinectapp.interfaces.SongManager;
+import kinectapp.interfaces.LayoutManager;
+import kinectapp.interfaces.ResultManager;
+import kinectapp.modules.BeatLayoutManager;
+import kinectapp.modules.BeatResultManager;
 
 
 public class BeatFactory implements Factory {
     
-    private final int WINDOW_WIDTH = 1920;
-    private final int WINDOW_HEIGHT = 1080;
     
     private int masterClaps;
-    
-    private double userBPMResult;
-    private double userClaps;
-    private double BPMDeviation;
-    
-    public List userTimesBetweenClaps = new ArrayList<Double>();
-    
-    private boolean isOnEasyMode;
-    private boolean isGameOver;
     
     private FrameRateManager frameRateManager;
     private LevelManager levelManager;
     private SongManager songManager;
     private GameStateManager gameStateManager;
-    
-    @Override
-    public int getWindowWidth () {
-        return this.WINDOW_WIDTH;
-    }
-    @Override
-    public int getWindowHeight () {
-        return this.WINDOW_HEIGHT;
-    }
-    
-    @Override
-    public boolean isGameRunning (GraphicSkeleton skeleton) {
-        if(skeleton.getClapCount() < this.getMasterClaps() && !this.isGameOver)
-        {
-            return true;
-        }
-        else 
-        {
-            return false;
-        }
-    }
-    @Override
-    public boolean isGameToBeOver (GraphicSkeleton skeleton) {
-        if(skeleton.getClapCount() == this.getMasterClaps() && !this.isGameOver)
-        {
-            return true;
-        }
-        else 
-        {
-            return false;
-        }
-    }
-    
-    
+    private ResultManager resultManager;
+    private LayoutManager layoutManager;
+
     @Override
     public int getMasterClaps () {
         return this.masterClaps;
@@ -66,46 +34,6 @@ public class BeatFactory implements Factory {
     @Override
     public void setMasterClaps (int claps) {
         this.masterClaps = claps;
-    }
-    
-    @Override
-    public double getUserBPMResult () {
-        return this.userBPMResult;
-    }
-    @Override
-    public void setUserBPMResult (double BPM) {
-        this.userBPMResult = BPM;
-    }
-    
-    @Override
-    public double getUserClaps () {
-        return this.userClaps;
-    }
-    @Override
-    public void setUserClaps (int claps) {
-        this.userClaps = claps;
-    }
-    
-    @Override
-    public List getUserTimesBetweenClaps () {
-        return this.userTimesBetweenClaps;
-    }
-    @Override
-    public void setUserTimesBetweenClaps (List userTimesBetweenClaps) {
-        this.userTimesBetweenClaps = userTimesBetweenClaps;
-    }
-    @Override
-    public void addToUserTimesBetweenClaps (int time) {
-        this.userTimesBetweenClaps.add(time);
-    }
-    
-    @Override
-    public double getBPMDeviation () {
-        return this.BPMDeviation;
-    }
-    @Override
-    public void setBPMDeviation (double dev) {
-        this.BPMDeviation = dev;
     }
     
     
@@ -138,6 +66,22 @@ public class BeatFactory implements Factory {
             this.gameStateManager = new BeatGameStateManager();
         }
         return this.gameStateManager;
+    }
+    
+    @Override
+    public ResultManager getResultManager () {
+        if (this.resultManager == null) {
+            this.resultManager = new BeatResultManager();
+        }
+        return this.resultManager;    
+    }
+    
+    @Override
+    public LayoutManager getLayoutManager () {
+        if (this.layoutManager == null) {
+            this.layoutManager = new BeatLayoutManager();
+        }
+        return this.layoutManager;    
     }
     
 }
