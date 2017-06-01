@@ -38,10 +38,10 @@ public class KinectApp {
         Game game = new Game(factory, mainFrame);
         
         if(!this.initiated) {
-            init(mainFrame);
+            this.init(mainFrame);
         }
         else {
-            reset(mainFrame);
+            this.reset(mainFrame);
         }
         
         mainFrame.setVisible(true);
@@ -52,16 +52,19 @@ public class KinectApp {
         
         
         while(this.gameStateManager.isRunning()) {
-            update();
+            this.update();
         }
         
         mainFrame.setVisible(false);
         game.showResults();
         
         while(!this.gameStateManager.isRestartButtonClicked()) {
-            if(this.gameStateManager.isToRestartGame()) {
-                startGame();
-            }
+            
+        }
+        
+        if(this.gameStateManager.isToRestartGame()) {
+            this.gameStateManager.resetGameState();
+            this.startGame();
         }
     }
     

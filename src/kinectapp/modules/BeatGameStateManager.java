@@ -65,6 +65,14 @@ public class BeatGameStateManager implements GameStateManager {
         this.restartButtonClicked = true;
     }
 
+    
+    @Override
+    public void resetGameState() {
+        this.toRestartGame = false;
+        this.restartButtonClicked = false;
+    }
+
+    
     @Override
     public boolean isRestartButtonClicked() {
         return this.restartButtonClicked;

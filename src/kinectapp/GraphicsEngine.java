@@ -44,32 +44,21 @@ public class GraphicsEngine extends JPanel{
         
         this.setLayout(new BorderLayout());
         
-        this.infoText = "Master BPM: " + this.levelManager.getCurrentLevel().song.BPM + "      Max number of claps: " + this.gameStateManager.getMasterClaps();
-        
-
-        if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
-            this.infoText = this.infoText.concat("      Your BPM: " + 0);
-        }
-
-        this.infoLabel = new JLabel(this.infoText); 
-        this.infoLabel.setFont(defaultFont);
-        this.add(this.infoLabel, BorderLayout.PAGE_START);
-        container.add(this);
-
+        this.setUpInfoText(container);
 
         this.skeletonService = new SkeletonService(this.factory);
         this.graphicSkeletons = new ArrayList<GraphicSkeleton>();
         
         timer = new Timer(60000/(int)this.levelManager.getCurrentLevel().song.BPM/2, new ActionListener() {
-                                             public void actionPerformed( ActionEvent e ) {
-                                                 if(!tick) {
-                                                     tick = true;
-                                                             }
-                                                 else {
-                                                     tick = false;
-                                                 }
-                                             }
-                                           });
+            public void actionPerformed( ActionEvent e ) {
+                if(!tick) {
+                    tick = true;
+                            }
+                else {
+                    tick = false;
+                }
+            }
+        });
         timer.setInitialDelay(60000/(int)this.levelManager.getCurrentLevel().song.BPM/2);
         timer.start();
         
@@ -78,8 +67,23 @@ public class GraphicsEngine extends JPanel{
     
     public void reset (JFrame container) {
         
-        this.infoText = "Master BPM: " + this.levelManager.getCurrentLevel().song.BPM + "      Max number of claps: " + this.gameStateManager.getMasterClaps();
+        this.removeAll();
         
+        this.setUpInfoText(container);
+        
+        for (GraphicSkeleton graphicSkeleton : this.graphicSkeletons) {
+            graphicSkeleton.resetBPMCounter();
+        }
+        
+    }       
+    
+    public List<GraphicSkeleton> getGraphicSkeletons() {
+        return this.graphicSkeletons;
+    }
+            
+    
+    private void setUpInfoText (JFrame container) {
+        this.infoText = "Master BPM: " + this.levelManager.getCurrentLevel().song.BPM + "      Max number of claps: " + this.gameStateManager.getMasterClaps();
 
         if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
             this.infoText.concat("Your BPM: " + 0 + "      ");
@@ -89,17 +93,7 @@ public class GraphicsEngine extends JPanel{
         this.infoLabel.setFont(defaultFont);
         this.add(this.infoLabel, BorderLayout.PAGE_START);
         container.add(this);
-        
-        for (GraphicSkeleton graphicSkeleton : this.graphicSkeletons) {
-            graphicSkeleton.resetBPMCounter();
-        }
-        
-    }        
-    
-    public List<GraphicSkeleton> getGraphicSkeletons() {
-        return this.graphicSkeletons;
     }
-            
     
     private GraphicSkeleton getGraphicSkeletonForSkeleton (Skeleton skeleton) {
         
@@ -148,75 +142,75 @@ public class GraphicsEngine extends JPanel{
                 joint.render(Color.red);
             }
             
-            /*if(factory.isOnEasyMode()) {
-                this.userResultText.setText("Your BPM: " + Math.round(skeleton.getBPM()*100.0)/100.0 + "      ");
-            }*/
-            
         }
     }
     
     @Override
     public void paintComponent (Graphics g) {
         
-        if ((!skeletonService.isSkeletonLost() && this.graphicSkeletons.get(0).getClapCount() >= this.gameStateManager.getMasterClaps())) {
-            this.gameStateManager.stopGame();
-        }
-        
-        if (!skeletonService.isSkeletonLost() && this.gameStateManager.isRunning()) 
-        {
-            super.paintComponent(g);
-            if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
-                if(tick) {
-                    g.setColor(Color.white);
-                }
-                else {
-                    g.setColor(Color.blue);
-                }
-            }
-            else {
-                g.setColor(Color.white);
-            }
-            
-            
-            g.fillRect(0, 0, factory.getLayoutManager().getWindowWidth(), factory.getLayoutManager().getWindowHeight());
-            
-            this.renderJoints(g);
-        }
-        else if (!skeletonService.isSkeletonLost()) 
-        {
-            
-            this.resultManager.setUserBPM(this.graphicSkeletons.get(0).getBPM());
-            this.resultManager.setUserClaps(this.graphicSkeletons.get(0).getClapCount());
-            
-            for (int i = 0; i < this.graphicSkeletons.get(0).getTimesBetweenClaps().size(); i++) {  
-                List x = this.resultManager.getUserTimesBetweenClaps();
-                x.add(this.graphicSkeletons.get(0).getTimesBetweenClaps().get(i));
-                this.resultManager.setUserTimesBetweenClaps(x);
+        if(this.graphicSkeletons.size() > 0) {
+            if ((this.factory.getKinectManager().isSkeletonDataAvailable() && this.graphicSkeletons.get(0).getClapCount() >= this.gameStateManager.getMasterClaps())) {
+                this.gameStateManager.stopGame();
             }
 
-            this.gameStateManager.stopGame();
-            this.graphicSkeletons.get(0).resetBPMCounter();
-        }
-        else
-        {
-            
-            if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
-                if(tick) {
-                    g.setColor(Color.white);
+            if (this.factory.getKinectManager().isSkeletonDataAvailable() && this.gameStateManager.isRunning()) 
+            {
+                super.paintComponent(g);
+                if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
+                    if(tick) {
+                        g.setColor(Color.white);
+                    }
+                    else {
+                        g.setColor(Color.blue);
+                    }
                 }
                 else {
-                    g.setColor(Color.blue);
+                    g.setColor(Color.white);
                 }
+
+
+                g.fillRect(0, 0, factory.getLayoutManager().getWindowWidth(), factory.getLayoutManager().getWindowHeight());
+
+                this.renderJoints(g);
             }
-            else {
-                g.setColor(Color.white);
+            else if (this.factory.getKinectManager().isSkeletonDataAvailable()) 
+            {
+
+                this.resultManager.setUserBPM(this.graphicSkeletons.get(0).getBPM());
+                this.resultManager.setUserClaps(this.graphicSkeletons.get(0).getClapCount());
+
+                List x = new ArrayList<Double>();
+                
+                for (int i = 0; i < this.graphicSkeletons.get(0).getTimesBetweenClaps().size(); i++) {  
+                    x.add(this.graphicSkeletons.get(0).getTimesBetweenClaps().get(i));
+                    this.resultManager.setUserTimesBetweenClaps(x);
+                }
+
+                this.gameStateManager.stopGame();
+                this.graphicSkeletons.get(0).resetBPMCounter();
             }
-            g.fillRect(0, 0, factory.getLayoutManager().getWindowWidth(), factory.getLayoutManager().getWindowHeight());
-           
+            else
+            {
+
+                if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
+                    if(tick) {
+                        g.setColor(Color.white);
+                    }
+                    else {
+                        g.setColor(Color.blue);
+                    }
+                }
+                else {
+                    g.setColor(Color.white);
+                }
+                g.fillRect(0, 0, factory.getLayoutManager().getWindowWidth(), factory.getLayoutManager().getWindowHeight());
+
+            }
+
+            repaint();
         }
-        
-       repaint();
-        
+
+
     }
     
     public void update () {

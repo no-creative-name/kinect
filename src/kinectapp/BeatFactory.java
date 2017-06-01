@@ -5,18 +5,21 @@ import kinectapp.modules.BeatGameStateManager;
 import kinectapp.interfaces.GameStateManager;
 import kinectapp.modules.BeatFrameRateManager;
 import kinectapp.interfaces.FrameRateManager;
+import kinectapp.interfaces.KinectManager;
 import kinectapp.interfaces.LevelManager;
 import kinectapp.modules.BeatLevelManager;
 import kinectapp.modules.BeatSongManager;
 import kinectapp.interfaces.SongManager;
 import kinectapp.interfaces.LayoutManager;
 import kinectapp.interfaces.ResultManager;
+import kinectapp.modules.BeatKinectManager;
 import kinectapp.modules.BeatLayoutManager;
 import kinectapp.modules.BeatResultManager;
 
 
 public class BeatFactory implements Factory {
     
+    private KinectManager kinectManager;
     private FrameRateManager frameRateManager;
     private LevelManager levelManager;
     private SongManager songManager;
@@ -24,6 +27,14 @@ public class BeatFactory implements Factory {
     private ResultManager resultManager;
     private LayoutManager layoutManager;
     
+    
+    @Override
+    public KinectManager getKinectManager () {
+        if (this.kinectManager == null) {
+            this.kinectManager = new BeatKinectManager();
+        }
+        return this.kinectManager;    
+    }
     
     @Override
     public FrameRateManager getFrameRateManager() {

@@ -22,5 +22,7 @@ public interface GameStateManager {
     public void restartGame ();
     public void closeGame ();
     
+    public void resetGameState ();
+    
     public boolean isRestartButtonClicked ();
 }
