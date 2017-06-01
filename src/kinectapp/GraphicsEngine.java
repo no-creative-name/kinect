@@ -15,12 +15,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import kinectapp.interfaces.LayoutManager;
 import kinectapp.interfaces.ResultManager;
 
 
 public class GraphicsEngine extends JPanel{
     
     private Factory factory;
+    private LayoutManager layoutManager;
     private LevelManager levelManager;
     private GameStateManager gameStateManager;
     private ResultManager resultManager;
@@ -36,11 +38,12 @@ public class GraphicsEngine extends JPanel{
     public GraphicsEngine (JFrame container, Factory factory) {
         
         this.factory = factory;
+        this.layoutManager = factory.getLayoutManager();
         this.levelManager = factory.getLevelManager();
         this.gameStateManager = factory.getGameStateManager();
         this.resultManager = factory.getResultManager();
         
-        this.defaultFont = new Font(this.factory.getLayoutManager().getDefaultFontFamily(), Font.PLAIN, 40);
+        this.defaultFont = new Font(this.layoutManager.getDefaultFontFamily(), Font.PLAIN, 40);
         
         this.setLayout(new BorderLayout());
         
@@ -139,43 +142,45 @@ public class GraphicsEngine extends JPanel{
             
             for (GraphicJoint joint : skeleton.getJoints()) {
                 joint.setGraphics(g);
-                joint.render(Color.red);
+                joint.render(this.layoutManager.getDefaultJointColor());
             }
             
         }
     }
     
+    private void paintBackground (Graphics g) {
+        if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
+            if(tick) {
+                g.setColor(this.layoutManager.getDefaultBackgroundColor());
+            }
+            else {
+                g.setColor(this.layoutManager.getBlinkingBackgroundColor());
+            }
+        }
+        else {
+            g.setColor(this.layoutManager.getDefaultBackgroundColor());
+        }
+
+
+        g.fillRect(0, 0, this.layoutManager.getWindowWidth(), this.layoutManager.getWindowHeight());
+    }
+    
     @Override
     public void paintComponent (Graphics g) {
         
-        if(this.graphicSkeletons.size() > 0) {
-            if ((this.factory.getKinectManager().isSkeletonDataAvailable() && this.graphicSkeletons.get(0).getClapCount() >= this.gameStateManager.getMasterClaps())) {
+        if(this.graphicSkeletons.size() > 0 && this.factory.getKinectManager().isSkeletonDataAvailable()) {
+            
+            if ((this.graphicSkeletons.get(0).getClapCount() >= this.gameStateManager.getMasterClaps())) {
                 this.gameStateManager.stopGame();
             }
 
-            if (this.factory.getKinectManager().isSkeletonDataAvailable() && this.gameStateManager.isRunning()) 
+            if (this.gameStateManager.isRunning()) 
             {
-                super.paintComponent(g);
-                if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
-                    if(tick) {
-                        g.setColor(Color.white);
-                    }
-                    else {
-                        g.setColor(Color.blue);
-                    }
-                }
-                else {
-                    g.setColor(Color.white);
-                }
-
-
-                g.fillRect(0, 0, factory.getLayoutManager().getWindowWidth(), factory.getLayoutManager().getWindowHeight());
-
+                this.paintBackground(g);
                 this.renderJoints(g);
             }
-            else if (this.factory.getKinectManager().isSkeletonDataAvailable()) 
+            else
             {
-
                 this.resultManager.setUserBPM(this.graphicSkeletons.get(0).getBPM());
                 this.resultManager.setUserClaps(this.graphicSkeletons.get(0).getClapCount());
 
@@ -186,30 +191,13 @@ public class GraphicsEngine extends JPanel{
                     this.resultManager.setUserTimesBetweenClaps(x);
                 }
 
-                this.gameStateManager.stopGame();
                 this.graphicSkeletons.get(0).resetBPMCounter();
             }
+        }
             else
             {
-
-                if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
-                    if(tick) {
-                        g.setColor(Color.white);
-                    }
-                    else {
-                        g.setColor(Color.blue);
-                    }
-                }
-                else {
-                    g.setColor(Color.white);
-                }
-                g.fillRect(0, 0, factory.getLayoutManager().getWindowWidth(), factory.getLayoutManager().getWindowHeight());
-
+                this.paintBackground(g);
             }
-
-            repaint();
-        }
-
 
     }
     

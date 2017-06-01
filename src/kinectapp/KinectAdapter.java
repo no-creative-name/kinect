@@ -24,7 +24,11 @@ public class KinectAdapter extends J4KSDK{
         
         this.coordinates = new double[6][25][3];
         
-        Arrays.fill(this.coordinates, 0);
+        for(int i = 0; i < 6; i++) {
+            for (int j = 0; j < 25; j++) {
+                Arrays.fill(this.coordinates[i][j], 0.0);
+            }
+        }
         
         this.startKinect();
     }

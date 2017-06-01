@@ -1,6 +1,8 @@
 
 package kinectapp.interfaces;
 
+import java.awt.Color;
+
 
 public interface LayoutManager {
     
@@ -10,5 +12,7 @@ public interface LayoutManager {
     
     public String getDefaultFontFamily ();
     
-    
+    public Color getDefaultBackgroundColor ();
+    public Color getBlinkingBackgroundColor();
+    public Color getDefaultJointColor ();
 }

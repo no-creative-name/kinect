@@ -32,7 +32,7 @@ public class BeatGameStateManager implements GameStateManager {
     public int getMasterClaps() {
         return this.masterClaps;
     }
-
+    
     @Override
     public boolean isRunning() {
         return this.running;
