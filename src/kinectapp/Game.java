@@ -34,7 +34,7 @@ public class Game implements ActionListener {
     private GameStateManager gameStateManager;
     private ResultManager resultManager;
 
-    private boolean onPlayAgain = false;
+    //private boolean onPlayAgain = false;
     
     private Results resultsPanel;
     
@@ -57,8 +57,7 @@ public class Game implements ActionListener {
     private void showSetup(JFrame frame) {
         
         this.levelManager.setCurrentLevel(0);
-        factory.setMasterClaps(3);
-        
+        this.gameStateManager.setMasterClaps(8);
         
         JPanel p = new JPanel(new BorderLayout(30,30));
         
@@ -80,7 +79,7 @@ public class Game implements ActionListener {
         controls.add(playButton);
        //JTextField masterBPMField = new JTextField("" + this.masterBPM);
         //controls.add(masterBPMField);
-        JTextField maxClapsField = new JTextField("" + factory.getMasterClaps());
+        JTextField maxClapsField = new JTextField("" + this.gameStateManager.getMasterClaps());
         controls.add(maxClapsField);
         JCheckBox easyModeBox = new JCheckBox();
         controls.add(easyModeBox);
@@ -99,7 +98,7 @@ public class Game implements ActionListener {
         }*/
         
         try {
-            factory.setMasterClaps(Integer.parseInt(maxClapsField.getText()));   
+            this.gameStateManager.setMasterClaps(Integer.parseInt(maxClapsField.getText()));
         }
         catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Number of claps invalid. Please try again!");
@@ -120,31 +119,19 @@ public class Game implements ActionListener {
         this.resultManager.setBPMDeviation(Math.round(Math.abs((this.levelManager.getCurrentLevel().song.BPM - this.resultManager.getUserBPM()) / this.levelManager.getCurrentLevel().song.BPM * 100)*100.0)/100.0);
         
         resultsPanel = new Results(this.factory);
-        this.setupChart(resultsPanel);
         
         JLabel resultText = new JLabel(
                 "You've reached a BPM of " + Math.round(this.resultManager.getUserBPM()*100.0)/100.0 + ", that's a deviation of " + Math.round(this.resultManager.getBPMDeviation()*100.0)/100.0 + "%! Want to play again?"
         );
-        resultText.setFont(new Font("Roboto", Font.BOLD, 30));
-        
-        onPlayAgain = true;
-        
-        /*int reset = JOptionPane.showConfirmDialog(null, resultText, "Results", JOptionPane.YES_NO_OPTION);
-        
-        if(reset == JOptionPane.YES_OPTION) {
-            onPlayAgain = true;
-        }
-        else {
-            onPlayAgain = false;
-        }*/
+        resultText.setFont(new Font(this.factory.getLayoutManager().getDefaultFontFamily(), Font.BOLD, 30));
                 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == songList) {
-            Level selectedLevel = (Level)songList.getSelectedItem();
-            this.levelManager.setCurrentLevel(selectedLevel.id);
+            //Level selectedLevel = (Level)songList.getSelectedItem();
+            this.levelManager.setCurrentLevel(this.songList.getSelectedIndex());
         }
         if (e.getSource() == playButton) {
             this.playButtonPressed();
@@ -155,22 +142,5 @@ public class Game implements ActionListener {
     public void playButtonPressed() {
         this.levelManager.previewCurrentLevel();
     }
-        
     
-    
-    public void setupChart (JPanel panel) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        for (int i = 0; i < this.resultManager.getUserTimesBetweenClaps().size(); i++) {
-            dataset.setValue((long)this.resultManager.getUserTimesBetweenClaps().get(i)-(60000/this.levelManager.getCurrentLevel().song.BPM),"", "Clap "+(i+1)+"");
-        }
-        JFreeChart chart = ChartFactory.createBarChart("","","", dataset, PlotOrientation.VERTICAL, false, false, false);
-        CategoryPlot catPlot = chart.getCategoryPlot();
-        catPlot.setRangeGridlinePaint(Color.BLACK);
-        
-        ChartPanel chartPanel = new ChartPanel(chart);
-        
-        panel.add(chartPanel, BorderLayout.CENTER);
-        panel.validate();
-        
-    }
 }

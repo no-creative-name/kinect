@@ -9,7 +9,7 @@ public class KinectAdapter extends J4KSDK{
    
     private Factory factory;
     
-    private boolean skeletonLost = true;
+    private boolean skeletonsLost = true;
     private boolean skeletonDataAvailable = false;
     
     private double[][][] coordinates;
@@ -19,7 +19,6 @@ public class KinectAdapter extends J4KSDK{
     private long oldSkeletonDataCounter = 0;
     private int skeletonCount;
     
-    private long prevTime; 
     
     public KinectAdapter (Factory factory) {
         
@@ -45,7 +44,7 @@ public class KinectAdapter extends J4KSDK{
     
     
     public boolean isSkeletonLost () {
-        return this.skeletonLost;
+        return this.skeletonsLost;
     }
     
     public boolean isSkeletonDataAvailable () {
@@ -97,11 +96,11 @@ public class KinectAdapter extends J4KSDK{
     public void onColorFrameEvent(byte[] color_frame) {
         
         if (this.skeletonDataCounter > this.oldSkeletonDataCounter) {
-            skeletonLost = false;
+            skeletonsLost = false;
         }
         
         else {
-            skeletonLost = true;
+            skeletonsLost = true;
         }
         
         this.oldSkeletonDataCounter = this.skeletonDataCounter;

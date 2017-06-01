@@ -9,10 +9,6 @@ import kinectapp.interfaces.ResultManager;
 
 public interface Factory {
     
-    public int getMasterClaps ();
-    public void setMasterClaps (int claps);
-    
-    
     public FrameRateManager getFrameRateManager ();
     
     public LevelManager getLevelManager ();

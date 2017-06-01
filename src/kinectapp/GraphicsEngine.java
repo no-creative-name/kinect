@@ -27,7 +27,7 @@ public class GraphicsEngine extends JPanel{
     
     private SkeletonService skeletonService;
     private List<GraphicSkeleton> graphicSkeletons;
-    private Font defaultFont = new Font("Roboto", Font.PLAIN, 40);
+    private Font defaultFont;
     private String infoText;
     private JLabel infoLabel;
     private boolean tick = false;
@@ -40,9 +40,11 @@ public class GraphicsEngine extends JPanel{
         this.gameStateManager = factory.getGameStateManager();
         this.resultManager = factory.getResultManager();
         
+        this.defaultFont = new Font(this.factory.getLayoutManager().getDefaultFontFamily(), Font.PLAIN, 40);
+        
         this.setLayout(new BorderLayout());
         
-        this.infoText = "Master BPM: " + this.levelManager.getCurrentLevel().song.BPM + "      Max number of claps: " + factory.getMasterClaps();
+        this.infoText = "Master BPM: " + this.levelManager.getCurrentLevel().song.BPM + "      Max number of claps: " + this.gameStateManager.getMasterClaps();
         
 
         if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
@@ -76,7 +78,7 @@ public class GraphicsEngine extends JPanel{
     
     public void reset (JFrame container) {
         
-        this.infoText = "Master BPM: " + this.levelManager.getCurrentLevel().song.BPM + "      Max number of claps: " + factory.getMasterClaps();
+        this.infoText = "Master BPM: " + this.levelManager.getCurrentLevel().song.BPM + "      Max number of claps: " + this.gameStateManager.getMasterClaps();
         
 
         if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
@@ -156,7 +158,7 @@ public class GraphicsEngine extends JPanel{
     @Override
     public void paintComponent (Graphics g) {
         
-        if ((!skeletonService.isSkeletonLost() && this.graphicSkeletons.get(0).getClapCount() >= this.factory.getMasterClaps())) {
+        if ((!skeletonService.isSkeletonLost() && this.graphicSkeletons.get(0).getClapCount() >= this.gameStateManager.getMasterClaps())) {
             this.gameStateManager.stopGame();
         }
         

@@ -8,6 +8,7 @@ public class BeatLayoutManager implements LayoutManager {
 
     private final int WINDOW_WIDTH = 1920;
     private final int WINDOW_HEIGHT = 1080;
+    private final String FONT_FAMILY = "HP Simplified";
     
     @Override
     public int getWindowWidth() {
@@ -17,6 +18,11 @@ public class BeatLayoutManager implements LayoutManager {
     @Override
     public int getWindowHeight() {
         return this.WINDOW_HEIGHT;
+    }
+
+    @Override
+    public String getDefaultFontFamily() {
+        return this.FONT_FAMILY;
     }
     
     

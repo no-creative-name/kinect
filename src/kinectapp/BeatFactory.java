@@ -17,24 +17,12 @@ import kinectapp.modules.BeatResultManager;
 
 public class BeatFactory implements Factory {
     
-    
-    private int masterClaps;
-    
     private FrameRateManager frameRateManager;
     private LevelManager levelManager;
     private SongManager songManager;
     private GameStateManager gameStateManager;
     private ResultManager resultManager;
     private LayoutManager layoutManager;
-
-    @Override
-    public int getMasterClaps () {
-        return this.masterClaps;
-    }
-    @Override
-    public void setMasterClaps (int claps) {
-        this.masterClaps = claps;
-    }
     
     
     @Override
@@ -51,13 +39,6 @@ public class BeatFactory implements Factory {
             this.levelManager = new BeatLevelManager(this.getSongManager());
         }
         return this.levelManager;
-    }
-
-    private SongManager getSongManager() {
-        if (this.songManager == null) {
-            this.songManager = new BeatSongManager();
-        }
-        return this.songManager;
     }
 
     @Override
@@ -82,6 +63,13 @@ public class BeatFactory implements Factory {
             this.layoutManager = new BeatLayoutManager();
         }
         return this.layoutManager;    
+    }
+
+    private SongManager getSongManager() {
+        if (this.songManager == null) {
+            this.songManager = new BeatSongManager();
+        }
+        return this.songManager;
     }
     
 }

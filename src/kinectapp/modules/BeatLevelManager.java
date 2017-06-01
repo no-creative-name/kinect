@@ -19,8 +19,8 @@ public class BeatLevelManager implements LevelManager{
         this.songManager = songManager;
         
         this.allLevels = new ArrayList<Level>();
-        Level example = new Level("No Roots", "No Roots.wav", 116);
-        this.allLevels.add(example);
+        this.allLevels.add(new Level("No Roots", "No Roots.wav", 116));
+        this.allLevels.add(new Level("Applause", "Applause.wav", 140));
         
     }
     

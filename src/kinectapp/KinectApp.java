@@ -58,15 +58,11 @@ public class KinectApp {
         mainFrame.setVisible(false);
         game.showResults();
         
-        /*if(Game.onPlayAgain) {
-            factory.setIsGameOver(false);
-            mainFrame.setVisible(false);
-            startGame();
+        while(!this.gameStateManager.isRestartButtonClicked()) {
+            if(this.gameStateManager.isToRestartGame()) {
+                startGame();
+            }
         }
-        else {
-            System.exit(0);
-        }*/
-        
     }
     
     public void update () {
