@@ -21,21 +21,27 @@ public class BeatLevelManager implements LevelManager{
         this.allLevels = new ArrayList<Level>();
         this.allLevels.add(new Level("No Roots", "No Roots.wav", 116));
         this.allLevels.add(new Level("Applause", "Applause.wav", 140));
+        this.allLevels.add(new Level("Mas Que Nada", "Mas Que Nada.wav", 100));
         
     }
     
+    @Override
     public List<Level> getAllLevels () {
         return this.allLevels;
     }
+    @Override
     public Level getCurrentLevel () {
         return this.allLevels.get(currentLevelId);
     }
+    @Override
     public void setCurrentLevel (int id) {
         this.currentLevelId = id;
     }
+    @Override
     public void previewCurrentLevel () {
         this.songManager.playSong(this.getCurrentLevel().song);
     }
+    @Override
     public void startCurrentLevel () {
         this.songManager.stopCurrentSong();
     }

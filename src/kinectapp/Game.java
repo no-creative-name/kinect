@@ -3,10 +3,10 @@ package kinectapp;
 
 import kinectapp.interfaces.GameStateManager;
 import kinectapp.interfaces.LevelManager;
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -17,14 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import kinectapp.interfaces.ResultManager;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
 
 
 public class Game implements ActionListener {
@@ -34,8 +27,6 @@ public class Game implements ActionListener {
     private GameStateManager gameStateManager;
     private ResultManager resultManager;
 
-    //private boolean onPlayAgain = false;
-    
     private Results resultsPanel;
     
     private JComboBox songList;
@@ -59,9 +50,91 @@ public class Game implements ActionListener {
         this.levelManager.setCurrentLevel(0);
         this.gameStateManager.setMasterClaps(8);
         
-        JPanel p = new JPanel(new BorderLayout(30,30));
+        JPanel p = new JPanel(new GridBagLayout());
         
-        JPanel labels = new JPanel(new GridLayout(0,1,2,2));
+        JLabel songListLabel = new JLabel("Select song");
+        GridBagConstraints songListLabelC = new GridBagConstraints();
+        songListLabelC.fill = GridBagConstraints.HORIZONTAL;
+        songListLabelC.gridx = 0;
+        songListLabelC.gridy = 0;
+        songListLabelC.insets = new Insets(20,20,20,50);
+        
+        
+        p.add(songListLabel, songListLabelC);
+        
+        /*JLabel playButtonLabel = new JLabel("");
+        GridBagConstraints playButtonLabelC = new GridBagConstraints();
+        playButtonLabelC.fill = GridBagConstraints.HORIZONTAL;
+        playButtonLabelC.gridx = 0;
+        playButtonLabelC.gridy = 1;
+        playButtonLabelC.insets = new Insets(0,0,20,50);
+        
+        p.add(playButtonLabel, playButtonLabelC);*/
+        
+        JLabel maxClapsFieldLabel = new JLabel("Number of claps");
+        GridBagConstraints maxClapsFieldLabelC = new GridBagConstraints();
+        maxClapsFieldLabelC.fill = GridBagConstraints.HORIZONTAL;
+        maxClapsFieldLabelC.gridx = 0;
+        maxClapsFieldLabelC.gridy = 2;
+        maxClapsFieldLabelC.insets = new Insets(0,20,20,50);
+        
+        p.add(maxClapsFieldLabel, maxClapsFieldLabelC);
+        
+        JLabel easyModeBoxLabel = new JLabel("Easy mode");
+        GridBagConstraints easyModeBoxLabelC = new GridBagConstraints();
+        easyModeBoxLabelC.fill = GridBagConstraints.HORIZONTAL;
+        easyModeBoxLabelC.gridx = 0;
+        easyModeBoxLabelC.gridy = 3;
+        easyModeBoxLabelC.insets = new Insets(0,20,20,50);
+        
+        p.add(easyModeBoxLabel, easyModeBoxLabelC);
+        
+        
+        
+        songList = new JComboBox(this.levelManager.getAllLevels().toArray());
+        songList.setSelectedIndex(0);
+        songList.addActionListener(this);
+        GridBagConstraints songListC = new GridBagConstraints();
+        songListC.fill = GridBagConstraints.HORIZONTAL;
+        songListC.gridx = 1;
+        songListC.gridy = 0;
+        songListC.insets = new Insets(20,0,20,20);
+        
+        p.add(songList, songListC);
+        
+        playButton = new JButton("▶");
+        playButton.addActionListener(this);
+        GridBagConstraints playButtonC = new GridBagConstraints();
+        playButtonC.fill = GridBagConstraints.HORIZONTAL;
+        playButtonC.gridx = 2;
+        playButtonC.gridy = 0;
+        playButtonC.insets = new Insets(20,0,20,20);
+        
+        p.add(playButton, playButtonC);
+        
+        JTextField maxClapsField = new JTextField("" + this.gameStateManager.getMasterClaps());
+        GridBagConstraints maxClapsFieldC = new GridBagConstraints();
+        maxClapsFieldC.fill = GridBagConstraints.HORIZONTAL;
+        maxClapsFieldC.gridx = 1;
+        maxClapsFieldC.gridy = 2;
+        maxClapsFieldC.insets = new Insets(0,0,20,20);
+        
+        p.add(maxClapsField, maxClapsFieldC);
+        
+        JCheckBox easyModeBox = new JCheckBox();
+        GridBagConstraints easyModeBoxC = new GridBagConstraints();
+        easyModeBoxC.fill = GridBagConstraints.HORIZONTAL;
+        easyModeBoxC.gridx = 1;
+        easyModeBoxC.gridy = 3;
+        easyModeBoxC.insets = new Insets(0,0,20,20);
+        
+        p.add(easyModeBox, easyModeBoxC);
+        
+        JOptionPane.showMessageDialog(
+            frame, p, "Setup", JOptionPane.PLAIN_MESSAGE
+        );
+        
+        /*JPanel labels = new JPanel(new GridLayout(0,1,2,2));
         labels.add(new JLabel("Select song", SwingConstants.RIGHT));
         labels.add(new JLabel("", SwingConstants.RIGHT));
         labels.add(new JLabel("Number of claps", SwingConstants.RIGHT));
@@ -87,7 +160,7 @@ public class Game implements ActionListener {
 
         JOptionPane.showMessageDialog(
             frame, p, "Setup", JOptionPane.QUESTION_MESSAGE
-        );
+        );*/
         
         /*try {
             masterBPM = Integer.parseInt(masterBPMField.getText());   
@@ -118,7 +191,7 @@ public class Game implements ActionListener {
         
         this.resultManager.setBPMDeviation(Math.round(Math.abs((this.levelManager.getCurrentLevel().song.BPM - this.resultManager.getUserBPM()) / this.levelManager.getCurrentLevel().song.BPM * 100)*100.0)/100.0);
         
-        resultsPanel = new Results(this.factory);
+        this.resultsPanel = new Results(this.factory);
         
         JLabel resultText = new JLabel(
                 "You've reached a BPM of " + Math.round(this.resultManager.getUserBPM()*100.0)/100.0 + ", that's a deviation of " + Math.round(this.resultManager.getBPMDeviation()*100.0)/100.0 + "%! Want to play again?"
