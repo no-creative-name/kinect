@@ -4,8 +4,10 @@ package kinectapp;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -22,15 +24,15 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 
-public class Results extends JPanel implements ActionListener{
+public class Results implements ActionListener{
     
         Factory factory;
         ResultManager resultManager;
         GameStateManager gameStateManager;
         
         JFrame resultFrame;
-        JButton yesBtn;
-        JButton noBtn;
+        JButton playAgainBtn;
+        JButton exitBtn;
     
     Results (Factory factory) {
         
@@ -41,25 +43,45 @@ public class Results extends JPanel implements ActionListener{
         this.resultFrame = new JFrame("Results");
         this.resultFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.resultFrame.setSize(factory.getLayoutManager().getWindowWidth(),factory.getLayoutManager().getWindowHeight());
-        this.resultFrame.setLayout(new FlowLayout());
-        
-        this.yesBtn = new JButton("Yes");
-        this.noBtn = new JButton ("No");
-        
-        this.yesBtn.addActionListener(this);
-        this.noBtn.addActionListener(this);
+        this.resultFrame.setLayout(new GridBagLayout());
         
         JLabel resultText = new JLabel(
-                "You've reached a BPM of " + Math.round(this.resultManager.getUserBPM()*100.0)/100.0 + ", that's a deviation of " + Math.round(this.resultManager.getBPMDeviation()*100.0)/100.0 + "%! Want to play again?"
+                "You've reached a BPM of " + Math.round(this.resultManager.getUserBPM()*100.0)/100.0 + ", that's a deviation of " + Math.round(this.resultManager.getBPMDeviation()*100.0)/100.0 + "%!"
         );
         resultText.setFont(new Font(this.factory.getLayoutManager().getDefaultFontFamily(), Font.PLAIN, 30));
+        GridBagConstraints resultTextC = new GridBagConstraints();
+        resultTextC.gridx = 0;
+        resultTextC.gridy = 0;
+        resultTextC.gridwidth = 2;
         
-        this.add(resultText);
+        this.resultFrame.add(resultText, resultTextC);
         
-        this.resultFrame.add(this);
-        this.resultFrame.add(setupChart());
-        this.resultFrame.add(this.yesBtn);
-        this.resultFrame.add(this.noBtn);
+        GridBagConstraints chartC = new GridBagConstraints();
+        chartC.fill = GridBagConstraints.HORIZONTAL;
+        chartC.gridx = 0;
+        chartC.gridy = 1;
+        chartC.gridwidth = 2;
+        
+        this.resultFrame.add(this.setupChart(), chartC);
+        
+        this.playAgainBtn = new JButton("Play again");
+        GridBagConstraints yesBtnC = new GridBagConstraints();
+        yesBtnC.gridx = 0;
+        yesBtnC.gridy = 2;
+        yesBtnC.gridwidth = 2;
+        yesBtnC.insets = new Insets(20,20,20,50);
+        this.playAgainBtn.addActionListener(this);
+        
+        this.resultFrame.add(this.playAgainBtn, yesBtnC);
+        
+        /*this.exitBtn = new JButton ("Exit");
+        GridBagConstraints noBtnC = new GridBagConstraints();
+        noBtnC.gridx = 1;
+        noBtnC.gridy = 2;
+        noBtnC.insets = new Insets(20,20,20,50);
+        this.exitBtn.addActionListener(this);
+        
+        this.resultFrame.add(this.exitBtn, noBtnC);*/
         
         this.resultFrame.setVisible(true);
     }
@@ -90,11 +112,11 @@ public class Results extends JPanel implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        if(ae.getSource() == this.yesBtn) {
+        if(ae.getSource() == this.playAgainBtn) {
             this.resultFrame.setVisible(false);
             this.gameStateManager.restartGame();
         }
-        if(ae.getSource() == this.noBtn) {
+        if(ae.getSource() == this.exitBtn) {
             System.exit(0);
         }
     }

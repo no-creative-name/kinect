@@ -45,5 +45,11 @@ public class BeatLevelManager implements LevelManager{
     public void startCurrentLevel () {
         this.songManager.stopCurrentSong();
     }
+    @Override
+    public void changeLevel() {
+        this.songManager.stopCurrentSong();
+    }
+    
+   
     
 }

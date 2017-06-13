@@ -12,5 +12,6 @@ public interface LevelManager {
     public void setCurrentLevel (int id);
     public void previewCurrentLevel ();
     public void startCurrentLevel ();
+    public void changeLevel ();
     
 }

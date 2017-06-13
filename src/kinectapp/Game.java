@@ -59,7 +59,6 @@ public class Game implements ActionListener {
         songListLabelC.gridy = 0;
         songListLabelC.insets = new Insets(20,20,20,50);
         
-        
         p.add(songListLabel, songListLabelC);
         
         JLabel maxClapsFieldLabel = new JLabel("Number of claps");
@@ -168,6 +167,7 @@ public class Game implements ActionListener {
         if (e.getSource() == songList) {
             //Level selectedLevel = (Level)songList.getSelectedItem();
             this.levelManager.setCurrentLevel(this.songList.getSelectedIndex());
+            this.factory.getLevelManager().changeLevel();
         }
         if (e.getSource() == playButton) {
             this.playButtonPressed();
