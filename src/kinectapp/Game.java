@@ -62,15 +62,6 @@ public class Game implements ActionListener {
         
         p.add(songListLabel, songListLabelC);
         
-        /*JLabel playButtonLabel = new JLabel("");
-        GridBagConstraints playButtonLabelC = new GridBagConstraints();
-        playButtonLabelC.fill = GridBagConstraints.HORIZONTAL;
-        playButtonLabelC.gridx = 0;
-        playButtonLabelC.gridy = 1;
-        playButtonLabelC.insets = new Insets(0,0,20,50);
-        
-        p.add(playButtonLabel, playButtonLabelC);*/
-        
         JLabel maxClapsFieldLabel = new JLabel("Number of claps");
         GridBagConstraints maxClapsFieldLabelC = new GridBagConstraints();
         maxClapsFieldLabelC.fill = GridBagConstraints.HORIZONTAL;
@@ -134,34 +125,6 @@ public class Game implements ActionListener {
             frame, p, "Setup", JOptionPane.PLAIN_MESSAGE
         );
         
-        /*JPanel labels = new JPanel(new GridLayout(0,1,2,2));
-        labels.add(new JLabel("Select song", SwingConstants.RIGHT));
-        labels.add(new JLabel("", SwingConstants.RIGHT));
-        labels.add(new JLabel("Number of claps", SwingConstants.RIGHT));
-        labels.add(new JLabel("Easy mode", SwingConstants.RIGHT));
-        p.add(labels, BorderLayout.WEST);
-        
-        JPanel controls = new JPanel(new GridLayout(0,1,2,2));
-        songList = new JComboBox(this.levelManager.getAllLevels().toArray());
-        songList.setSelectedIndex(0);
-        songList.addActionListener(this);
-        controls.add(songList);
-        
-        playButton = new JButton("▶");
-        playButton.addActionListener(this);
-        controls.add(playButton);
-       //JTextField masterBPMField = new JTextField("" + this.masterBPM);
-        //controls.add(masterBPMField);
-        JTextField maxClapsField = new JTextField("" + this.gameStateManager.getMasterClaps());
-        controls.add(maxClapsField);
-        JCheckBox easyModeBox = new JCheckBox();
-        controls.add(easyModeBox);
-        p.add(controls, BorderLayout.EAST);
-
-        JOptionPane.showMessageDialog(
-            frame, p, "Setup", JOptionPane.QUESTION_MESSAGE
-        );*/
-        
         /*try {
             masterBPM = Integer.parseInt(masterBPMField.getText());   
         }
@@ -193,10 +156,10 @@ public class Game implements ActionListener {
         
         this.resultsPanel = new Results(this.factory);
         
-        JLabel resultText = new JLabel(
+        /*JLabel resultText = new JLabel(
                 "You've reached a BPM of " + Math.round(this.resultManager.getUserBPM()*100.0)/100.0 + ", that's a deviation of " + Math.round(this.resultManager.getBPMDeviation()*100.0)/100.0 + "%! Want to play again?"
         );
-        resultText.setFont(new Font(this.factory.getLayoutManager().getDefaultFontFamily(), Font.BOLD, 30));
+        resultText.setFont(new Font(this.factory.getLayoutManager().getDefaultFontFamily(), Font.BOLD, 30));*/
                 
     }
 
