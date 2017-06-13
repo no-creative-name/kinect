@@ -22,6 +22,10 @@ public class BeatLevelManager implements LevelManager{
         this.allLevels.add(new Level("No Roots", "No Roots.wav", 116));
         this.allLevels.add(new Level("Applause", "Applause.wav", 140));
         this.allLevels.add(new Level("Mas Que Nada", "Mas Que Nada.wav", 100));
+        this.allLevels.add(new Level("Call On Me", "Call On Me.wav", 126));
+        this.allLevels.add(new Level("E.T.", "E.T..wav", 75));
+        this.allLevels.add(new Level("Happy", "Happy.wav", 160));
+        this.allLevels.add(new Level("Warwick Avenue", "Warwick Avenue.wav", 84));
         
     }
     

@@ -45,14 +45,20 @@ public class Results implements ActionListener{
         this.resultFrame.setSize(factory.getLayoutManager().getWindowWidth(),factory.getLayoutManager().getWindowHeight());
         this.resultFrame.setLayout(new GridBagLayout());
         
+        this.setupResults();
+        
+    }
+    
+    private void setupResults () {
         JLabel resultText = new JLabel(
-                "You've reached a BPM of " + Math.round(this.resultManager.getUserBPM()*100.0)/100.0 + ", that's a deviation of " + Math.round(this.resultManager.getBPMDeviation()*100.0)/100.0 + "%!"
+                "Your BPM: " + Math.round(this.resultManager.getUserBPM()*100.0)/100.0 + "     Average deviation: " + Math.round(this.resultManager.getBPMDeviation()*100.0)/100.0 + "%"
         );
         resultText.setFont(new Font(this.factory.getLayoutManager().getDefaultFontFamily(), Font.PLAIN, 30));
         GridBagConstraints resultTextC = new GridBagConstraints();
         resultTextC.gridx = 0;
         resultTextC.gridy = 0;
         resultTextC.gridwidth = 2;
+        resultTextC.insets = new Insets(0,0,30,0);
         
         this.resultFrame.add(resultText, resultTextC);
         
@@ -81,17 +87,18 @@ public class Results implements ActionListener{
         noBtnC.insets = new Insets(20,20,20,50);
         this.exitBtn.addActionListener(this);
         
-        this.resultFrame.add(this.exitBtn, noBtnC);*/
         
+        this.resultFrame.add(this.exitBtn, noBtnC);*/
         this.resultFrame.setVisible(true);
     }
         
-    public JPanel setupChart () {
+    private JPanel setupChart () {
+        
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (int i = 0; i < this.resultManager.getUserTimesBetweenClaps().size(); i++) {
             dataset.setValue((long)this.resultManager.getUserTimesBetweenClaps().get(i)-(60000/this.factory.getLevelManager().getCurrentLevel().song.BPM),"", "Clap "+(i+1)+"");
         }
-        JFreeChart chart = ChartFactory.createBarChart("","","", dataset, PlotOrientation.VERTICAL, false, false, false);
+        JFreeChart chart = ChartFactory.createBarChart("Deviation of single claps","Claps","Deviation in ms", dataset, PlotOrientation.VERTICAL, false, false, false);
         CategoryPlot catPlot = chart.getCategoryPlot();
         catPlot.setRangeGridlinePaint(Color.BLACK);
         

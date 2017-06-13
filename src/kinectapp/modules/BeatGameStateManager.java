@@ -35,7 +35,7 @@ public class BeatGameStateManager implements GameStateManager {
     
     @Override
     public boolean isRunning() {
-        return false;
+        return this.running;
     }
 
     @Override
