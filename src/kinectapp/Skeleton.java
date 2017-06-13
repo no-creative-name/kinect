@@ -13,7 +13,8 @@ public class Skeleton {
     private List<Joint> joints;
     private int id;
     
-    private boolean hasClapped;
+    private boolean isSkeletonInitialized;
+    private boolean hasClapped = true;
     private int clapCounter;
     private int mistakeCounter;
     
@@ -155,7 +156,7 @@ public class Skeleton {
     public boolean isCurrentlyClapping () {
         
         if (this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) < 0.15
-         && this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) != 0 ) 
+         && this.getLengthOf(this.getVectorBetween(JointNames.HAND_LEFT, JointNames.HAND_RIGHT)) != 0) 
         {
             return true;
         }
@@ -201,7 +202,6 @@ public class Skeleton {
             
         if (!this.hasClapped && this.isCurrentlyClapping()) 
             {
-                
                 if(this.prevClapTime != 0) {
                     
                     this.currentClapTime = System.currentTimeMillis();

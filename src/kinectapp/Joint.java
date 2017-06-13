@@ -96,7 +96,6 @@ public class Joint {
             this.filteredOutputX+=this.filteredX[i];
             this.filteredOutputY+=this.filteredY[i];
             this.filteredOutputZ+=this.filteredZ[i];
-            
         }
         
         this.filteredOutputX/=this.FILTER_SIZE;

@@ -96,7 +96,7 @@ public class Results implements ActionListener{
         
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (int i = 0; i < this.resultManager.getUserTimesBetweenClaps().size(); i++) {
-            dataset.setValue((long)this.resultManager.getUserTimesBetweenClaps().get(i)-(60000/this.factory.getLevelManager().getCurrentLevel().song.BPM),"", "Clap "+(i+1)+"");
+            dataset.setValue((long)this.resultManager.getUserTimesBetweenClaps().get(i)-(60000/this.factory.getLevelManager().getCurrentLevel().song.BPM),"", "Clap "+(i+2)+"");
         }
         JFreeChart chart = ChartFactory.createBarChart("Deviation of single claps","Claps","Deviation in ms", dataset, PlotOrientation.VERTICAL, false, false, false);
         CategoryPlot catPlot = chart.getCategoryPlot();
