@@ -1,12 +1,17 @@
 
 package kinectapp.modules;
 
+import java.io.File;
 import kinectapp.interfaces.LevelManager;
 import kinectapp.interfaces.SongManager;
 import java.util.ArrayList;
 import java.util.List;
 import kinectapp.Level;
-
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.AudioHeader;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
 
 public class BeatLevelManager implements LevelManager{
     
@@ -18,17 +23,38 @@ public class BeatLevelManager implements LevelManager{
         
         this.songManager = songManager;
         
+        
+        
         this.allLevels = new ArrayList<Level>();
-        this.allLevels.add(new Level("No Roots", "No Roots.wav", 116));
-        this.allLevels.add(new Level("Applause", "Applause.wav", 140));
-        this.allLevels.add(new Level("Mas Que Nada", "Mas Que Nada.wav", 100));
-        this.allLevels.add(new Level("Call On Me", "Call On Me.wav", 126));
-        this.allLevels.add(new Level("E.T.", "E.T..wav", 75));
-        this.allLevels.add(new Level("Happy", "Happy.wav", 160));
-        this.allLevels.add(new Level("Warwick Avenue", "Warwick Avenue.wav", 84));
+        this.generateLevelsFromMP3s();
         
     }
     
+
+    @Override
+    public void generateLevelsFromMP3s() {
+        File folder = new File("src/songs");
+        File[] listOfFiles = folder.listFiles();
+        
+        for(int i = 0; i < listOfFiles.length; i++) {
+            File f = listOfFiles[i];
+            AudioFile af = new AudioFile();
+            try {
+                af = AudioFileIO.read(f);
+            }
+            catch (Exception e) {
+
+            }
+            Tag tag = af.getTag();
+            String title = tag.getFirst(FieldKey.TITLE);
+            
+            String artist = tag.getFirst(FieldKey.ARTIST);
+            String fileName = artist + " - " + title + ".mp3";
+            double BPM = Double.parseDouble(tag.getFirst(FieldKey.BPM));
+            
+            this.allLevels.add(new Level(title, fileName, BPM));
+        }
+    }
     @Override
     public List<Level> getAllLevels () {
         return this.allLevels;
@@ -53,7 +79,6 @@ public class BeatLevelManager implements LevelManager{
     public void changeLevel() {
         this.songManager.stopCurrentSong();
     }
-    
    
     
 }

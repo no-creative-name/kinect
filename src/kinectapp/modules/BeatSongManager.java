@@ -6,6 +6,7 @@ import kinectapp.interfaces.SongManager;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import kinectapp.Song;
 
 
@@ -14,6 +15,7 @@ public class BeatSongManager implements SongManager {
     Song currentSong;
     String songDirectory = "src/songs/";
     MediaPlayer player;
+    boolean mediaPlayerInitiated;
     JFXPanel fxPanel = new JFXPanel();
     
     public void playSong (Song song) {
@@ -23,6 +25,7 @@ public class BeatSongManager implements SongManager {
            String songFile = this.songDirectory + song.fileName;
            Media currentSong = new Media(new File(songFile).toURI().toString());
            this.player = new MediaPlayer(currentSong);
+           this.mediaPlayerInitiated = true;
            player.play();
        }
        catch (Exception e) {
@@ -31,11 +34,13 @@ public class BeatSongManager implements SongManager {
     }
     
     public void stopCurrentSong () {
-        try {
-            this.player.stop();
-        }
-        catch (Exception e) {
-            System.out.println("Couldn't stop playing song: " + this.songDirectory + this.currentSong.fileName);
+        if(this.mediaPlayerInitiated) {
+            try {
+                this.player.stop();
+            }
+            catch (Exception e) {
+                System.out.println("Couldn't stop playing song: " + this.songDirectory + this.currentSong.fileName);
+            }
         }
     }
     
