@@ -99,26 +99,6 @@ public class Results implements ActionListener{
         
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         
-        List test = new ArrayList<Double>();
-        test.add((long)150);
-        test.add((long)750);
-        test.add((long)200);
-        test.add((long)700);
-        test.add((long)250);
-        test.add((long)650);
-        test.add((long)1000);
-        test.add((long)200);
-        test.add((long)150);
-        test.add((long)750);
-        test.add((long)200);
-        test.add((long)700);
-        test.add((long)250);
-        test.add((long)650);
-        test.add((long)1000);
-        test.add((long)200);
-        this.resultManager.setUserTimesBetweenClaps(test);
-        
-        
         for (int i = 0; i < this.resultManager.getUserTimesBetweenClaps().size(); i++) {
             dataset.setValue((long)this.resultManager.getUserTimesBetweenClaps().get(i)-(60000/this.factory.getLevelManager().getCurrentLevel().song.BPM),"", "Clap "+(i+2)+"");
         }
