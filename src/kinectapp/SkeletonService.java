@@ -10,8 +10,8 @@ public class SkeletonService {
     private Factory factory;
     private KinectManager kinectManager;
     
-    List <Skeleton> skeletons;
-    KinectAdapter kinectAdapter;
+    private List <Skeleton> skeletons;
+    private KinectAdapter kinectAdapter;
     
     public SkeletonService (Factory factory) {
         
