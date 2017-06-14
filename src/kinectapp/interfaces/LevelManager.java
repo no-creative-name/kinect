@@ -7,7 +7,7 @@ import kinectapp.Level;
 
 public interface LevelManager {
 
-    public void generateLevelsFromMP3s ();
+    public void generateLevelsFromSongsFolder ();
     public List<Level> getAllLevels ();
     public Level getCurrentLevel ();
     public void setCurrentLevel (int id);

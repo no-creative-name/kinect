@@ -26,13 +26,13 @@ public class BeatLevelManager implements LevelManager{
         
         
         this.allLevels = new ArrayList<Level>();
-        this.generateLevelsFromMP3s();
+        this.generateLevelsFromSongsFolder();
         
     }
     
 
     @Override
-    public void generateLevelsFromMP3s() {
+    public void generateLevelsFromSongsFolder() {
         File folder = new File("src/songs");
         File[] listOfFiles = folder.listFiles();
         
@@ -46,10 +46,17 @@ public class BeatLevelManager implements LevelManager{
 
             }
             Tag tag = af.getTag();
-            String title = tag.getFirst(FieldKey.TITLE);
             
+            String title = tag.getFirst(FieldKey.TITLE);
             String artist = tag.getFirst(FieldKey.ARTIST);
-            String fileName = artist + " - " + title + ".mp3";
+            String fileType = af.getAudioHeader().getFormat();
+            if("MPEG-1 Layer 3".equals(fileType)) {
+                fileType = ".mp3";
+            }
+            else if("AAC".equals(fileType)) {
+                fileType = ".m4a";
+            }
+            String fileName = artist + " - " + title + fileType;
             double BPM = Double.parseDouble(tag.getFirst(FieldKey.BPM));
             
             this.allLevels.add(new Level(title, fileName, BPM));
