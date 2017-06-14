@@ -1,13 +1,13 @@
 
 package kinectapp.interfaces;
 
-import kinectapp.DIFFICULTY;
+import kinectapp.Difficulty;
 
 
 public interface GameStateManager {
 
-    public void setDifficulty (DIFFICULTY difficulty);
-    public DIFFICULTY getDifficulty ();
+    public void setDifficulty (Difficulty difficulty);
+    public Difficulty getDifficulty ();
     
     public void setMasterClaps (int claps);
     public int getMasterClaps ();

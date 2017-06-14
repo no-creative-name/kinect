@@ -4,7 +4,6 @@ package kinectapp;
 import kinectapp.interfaces.GameStateManager;
 import kinectapp.interfaces.LevelManager;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -79,16 +78,11 @@ public class GraphicsEngine extends JPanel{
         }
         
     }       
-    
-    public List<GraphicSkeleton> getGraphicSkeletons() {
-        return this.graphicSkeletons;
-    }
             
-    
     private void setUpInfoText (JFrame container) {
         this.infoText = "Master BPM: " + this.levelManager.getCurrentLevel().song.BPM + "      Max number of claps: " + this.gameStateManager.getMasterClaps();
 
-        if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
+        if(this.gameStateManager.getDifficulty() == Difficulty.EASY) {
             this.infoText.concat("Your BPM: " + 0 + "      ");
         }
 
@@ -149,7 +143,8 @@ public class GraphicsEngine extends JPanel{
     }
     
     private void paintBackground (Graphics g) {
-        if(this.gameStateManager.getDifficulty() == DIFFICULTY.EASY) {
+        
+        if(this.gameStateManager.getDifficulty() == Difficulty.EASY) {
             if(tick) {
                 g.setColor(this.layoutManager.getDefaultBackgroundColor());
             }
@@ -163,6 +158,7 @@ public class GraphicsEngine extends JPanel{
 
 
         g.fillRect(0, 0, this.layoutManager.getWindowWidth(), this.layoutManager.getWindowHeight());
+        
     }
     
     @Override

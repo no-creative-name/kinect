@@ -2,24 +2,24 @@
 package kinectapp.modules;
 
 import kinectapp.interfaces.GameStateManager;
-import kinectapp.DIFFICULTY;
+import kinectapp.Difficulty;
 
 
 public class BeatGameStateManager implements GameStateManager {
 
-    private DIFFICULTY currentDifficulty = DIFFICULTY.NORMAL;
+    private Difficulty currentDifficulty = Difficulty.NORMAL;
     private int masterClaps = 0;
     private boolean running;
     private volatile boolean toRestartGame;
     private volatile boolean restartButtonClicked;
     
     @Override
-    public void setDifficulty(DIFFICULTY difficulty) {
+    public void setDifficulty(Difficulty difficulty) {
         this.currentDifficulty = difficulty;
     }
 
     @Override
-    public DIFFICULTY getDifficulty() {
+    public Difficulty getDifficulty() {
         return this.currentDifficulty;
     }
 

@@ -3,7 +3,6 @@ package kinectapp;
 
 import kinectapp.interfaces.GameStateManager;
 import kinectapp.interfaces.LevelManager;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -141,10 +140,10 @@ public class Game implements ActionListener {
         }
         
         if(easyModeBox.isSelected()) {
-            this.gameStateManager.setDifficulty(DIFFICULTY.EASY);
+            this.gameStateManager.setDifficulty(Difficulty.EASY);
         }
         else {
-            this.gameStateManager.setDifficulty(DIFFICULTY.NORMAL);
+            this.gameStateManager.setDifficulty(Difficulty.NORMAL);
         }
         
         }
@@ -154,11 +153,6 @@ public class Game implements ActionListener {
         this.resultManager.setBPMDeviation(Math.round(Math.abs((this.levelManager.getCurrentLevel().song.BPM - this.resultManager.getUserBPM()) / this.levelManager.getCurrentLevel().song.BPM * 100)*100.0)/100.0);
         
         this.resultsPanel = new Results(this.factory);
-        
-        /*JLabel resultText = new JLabel(
-                "You've reached a BPM of " + Math.round(this.resultManager.getUserBPM()*100.0)/100.0 + ", that's a deviation of " + Math.round(this.resultManager.getBPMDeviation()*100.0)/100.0 + "%! Want to play again?"
-        );
-        resultText.setFont(new Font(this.factory.getLayoutManager().getDefaultFontFamily(), Font.BOLD, 30));*/
                 
     }
 
@@ -170,13 +164,9 @@ public class Game implements ActionListener {
             this.factory.getLevelManager().changeLevel();
         }
         if (e.getSource() == playButton) {
-            this.playButtonPressed();
+            this.levelManager.previewCurrentLevel();
         }
             
-    }
-    
-    public void playButtonPressed() {
-        this.levelManager.previewCurrentLevel();
     }
     
 }

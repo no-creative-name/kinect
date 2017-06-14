@@ -13,7 +13,6 @@ public class Skeleton {
     private List<Joint> joints;
     private int id;
     
-    private boolean isSkeletonInitialized;
     private boolean hasClapped = true;
     private int clapCounter;
     private int mistakeCounter;
@@ -69,8 +68,6 @@ public class Skeleton {
         return this.timesBetweenClaps;
     }
 
-    
-    
     public double[] getVectorBetween (int a, int b) {
         
         double x = (this.joints.get(b).filteredOutputX-this.joints.get(a).filteredOutputX);

@@ -4,7 +4,7 @@ package kinectapp;
 
 public class Level {
     
-    public int id;
+    //public int id;
     public Song song;
     
     public Level (String displayName, String songFileName, double BPM) {

@@ -8,21 +8,21 @@ public class KinectApp {
 
     private Factory factory;
     private GameStateManager gameStateManager;
-    public boolean initiated = false;
-    public GraphicsEngine graphicsEngine;
+    private boolean initiated = false;
+    private GraphicsEngine graphicsEngine;
     
     public KinectApp (Factory factory) {
         this.factory = factory;
         this.gameStateManager = factory.getGameStateManager();
     }
 
-    public void init (JFrame mainFrame) {
+    private void init (JFrame mainFrame) {
         
         this.graphicsEngine = new GraphicsEngine(mainFrame, this.factory);
         
     }
     
-    public void reset (JFrame mainFrame) {
+    private void reset (JFrame mainFrame) {
         
         this.graphicsEngine.reset(mainFrame);
         
@@ -68,7 +68,7 @@ public class KinectApp {
         }
     }
     
-    public void update () {
+    private void update () {
         
         graphicsEngine.update();
     }

@@ -2,7 +2,7 @@
 package kinectapp;
 
 
-public enum DIFFICULTY {
+public enum Difficulty {
     EASY,
     NORMAL
 }
