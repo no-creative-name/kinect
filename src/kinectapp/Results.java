@@ -10,6 +10,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -44,6 +46,7 @@ public class Results implements ActionListener{
         this.resultFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.resultFrame.setSize(factory.getLayoutManager().getWindowWidth(),factory.getLayoutManager().getWindowHeight());
         this.resultFrame.setLayout(new GridBagLayout());
+        this.resultFrame.getContentPane().setBackground(Color.white);
         
         this.setupResults();
         
@@ -95,11 +98,33 @@ public class Results implements ActionListener{
     private JPanel setupChart () {
         
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        
+        List test = new ArrayList<Double>();
+        test.add((long)150);
+        test.add((long)750);
+        test.add((long)200);
+        test.add((long)700);
+        test.add((long)250);
+        test.add((long)650);
+        test.add((long)1000);
+        test.add((long)200);
+        test.add((long)150);
+        test.add((long)750);
+        test.add((long)200);
+        test.add((long)700);
+        test.add((long)250);
+        test.add((long)650);
+        test.add((long)1000);
+        test.add((long)200);
+        this.resultManager.setUserTimesBetweenClaps(test);
+        
+        
         for (int i = 0; i < this.resultManager.getUserTimesBetweenClaps().size(); i++) {
             dataset.setValue((long)this.resultManager.getUserTimesBetweenClaps().get(i)-(60000/this.factory.getLevelManager().getCurrentLevel().song.BPM),"", "Clap "+(i+2)+"");
         }
-        JFreeChart chart = ChartFactory.createBarChart("Deviation of single claps","Claps","Deviation in ms", dataset, PlotOrientation.VERTICAL, false, false, false);
+        JFreeChart chart = ChartFactory.createBarChart3D("Deviation of single claps","Claps","Deviation in ms", dataset, PlotOrientation.VERTICAL, false, false, false);
         CategoryPlot catPlot = chart.getCategoryPlot();
+        catPlot.getRenderer().setSeriesPaint(0, Color.WHITE);
         catPlot.setRangeGridlinePaint(Color.BLACK);
         
         ChartPanel JFreeChartPanel = new ChartPanel(chart);

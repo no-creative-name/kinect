@@ -10,11 +10,11 @@ public class BeatLayoutManager implements LayoutManager {
     private final int WINDOW_WIDTH = 1920;
     private final int WINDOW_HEIGHT = 1080;
     
-    private final String FONT_FAMILY = "HP Simplified";
+    private final String FONT_FAMILY = "Arial";
     
-    private Color defaultBackgroundColor = Color.WHITE;
-    private Color blinkingBackgroundColor = Color.BLUE;
-    private Color defaultJointColor = Color.ORANGE;
+    private final Color DEFAULT_BACKGROUND_COLOR = Color.WHITE;
+    private final Color BLINKING_BACKGROUND_COLOR = Color.BLUE;
+    private final Color DEFAULT_JOINT_COLOR = Color.ORANGE;
     
     @Override
     public int getWindowWidth() {
@@ -33,17 +33,17 @@ public class BeatLayoutManager implements LayoutManager {
 
     @Override
     public Color getDefaultBackgroundColor() {
-        return this.defaultBackgroundColor;
+        return this.DEFAULT_BACKGROUND_COLOR;
     }
 
     @Override
     public Color getBlinkingBackgroundColor() {
-        return this.blinkingBackgroundColor;
+        return this.BLINKING_BACKGROUND_COLOR;
     }
 
     @Override
     public Color getDefaultJointColor() {
-        return this.defaultJointColor;
+        return this.DEFAULT_JOINT_COLOR;
     }
     
     

@@ -3,9 +3,10 @@ package kinectapp;
 
 import kinectapp.interfaces.GameStateManager;
 import kinectapp.interfaces.LevelManager;
-import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class GraphicsEngine extends JPanel{
         
         this.defaultFont = new Font(this.layoutManager.getDefaultFontFamily(), Font.PLAIN, 40);
         
-        this.setLayout(new BorderLayout());
+        this.setLayout(new GridLayout(10,1));
         
         this.setUpInfoText(container);
 
@@ -88,7 +89,8 @@ public class GraphicsEngine extends JPanel{
 
         this.infoLabel = new JLabel(this.infoText); 
         this.infoLabel.setFont(defaultFont);
-        this.add(this.infoLabel, BorderLayout.PAGE_START);
+        this.infoLabel.setHorizontalAlignment(JLabel.CENTER);
+        this.add(this.infoLabel);
         container.add(this);
     }
     

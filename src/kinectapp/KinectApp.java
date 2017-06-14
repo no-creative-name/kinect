@@ -1,6 +1,7 @@
 
 package kinectapp;
 
+import java.awt.Color;
 import kinectapp.interfaces.GameStateManager;
 import javax.swing.JFrame;
 
