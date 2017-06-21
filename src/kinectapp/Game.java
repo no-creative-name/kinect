@@ -78,9 +78,11 @@ public class Game implements ActionListener {
         
         p.add(easyModeBoxLabel, easyModeBoxLabelC);
         
-        
-        
-        songList = new JComboBox(this.levelManager.getAllLevels().toArray());
+        songList = new JComboBox();
+        for (int i = 0; i < this.levelManager.getAllLevels().size(); i++) {
+            String level = this.levelManager.getAllLevels().get(i).song.displayName + " (" + this.levelManager.getAllLevels().get(i).song.BPM +" BPM)";
+            songList.addItem(level);
+        }
         songList.setSelectedIndex(0);
         songList.addActionListener(this);
         GridBagConstraints songListC = new GridBagConstraints();
