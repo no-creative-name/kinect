@@ -10,8 +10,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,6 +21,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 
@@ -54,7 +53,7 @@ public class Results implements ActionListener{
     
     private void setupResults () {
         JLabel resultText = new JLabel(
-                "Your BPM: " + Math.round(this.resultManager.getUserBPM()*100.0)/100.0 + "     Average deviation: " + Math.round(this.resultManager.getBPMDeviation()*100.0)/100.0 + "%"
+                "Master BPM: " + Math.round(this.factory.getLevelManager().getCurrentLevel().song.BPM*100.0)/100.0 + "     Your BPM: " + Math.round(this.resultManager.getUserBPM()*100.0)/100.0 + "     Average deviation: " + Math.round(this.resultManager.getBPMDeviation()*100.0)/100.0 + "%"
         );
         resultText.setFont(new Font(this.factory.getLayoutManager().getDefaultFontFamily(), Font.PLAIN, 30));
         GridBagConstraints resultTextC = new GridBagConstraints();
@@ -98,13 +97,23 @@ public class Results implements ActionListener{
     private JPanel setupChart () {
         
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        
         for (int i = 0; i < this.resultManager.getUserTimesBetweenClaps().size(); i++) {
             dataset.setValue((long)this.resultManager.getUserTimesBetweenClaps().get(i)-(60000/this.factory.getLevelManager().getCurrentLevel().song.BPM),"", "Clap "+(i+2)+"");
         }
-        JFreeChart chart = ChartFactory.createBarChart3D("Deviation of single claps","Claps","Deviation in ms", dataset, PlotOrientation.VERTICAL, false, false, false);
+        JFreeChart chart = ChartFactory.createBarChart3D(
+                "Deviation of single claps",
+                "Claps",
+                "Deviation in ms",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false,
+                false,
+                false
+        );
         CategoryPlot catPlot = chart.getCategoryPlot();
-        catPlot.getRenderer().setSeriesPaint(0, Color.WHITE);
+        CategoryItemRenderer renderer = new ResultsBarRenderer(); 
+        catPlot.setRenderer(renderer);
+        //catPlot.getRenderer().setSeriesPaint(0, Color.WHITE);
         catPlot.setRangeGridlinePaint(Color.BLACK);
         
         ChartPanel JFreeChartPanel = new ChartPanel(chart);
