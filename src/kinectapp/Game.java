@@ -3,6 +3,7 @@ package kinectapp;
 
 import kinectapp.interfaces.GameStateManager;
 import kinectapp.interfaces.LevelManager;
+import java.util.List;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -21,10 +22,10 @@ import kinectapp.interfaces.ResultManager;
 
 public class Game implements ActionListener {
     
-    private Factory factory;
-    private LevelManager levelManager;
-    private GameStateManager gameStateManager;
-    private ResultManager resultManager;
+    private final Factory factory;
+    private final LevelManager levelManager;
+    private final GameStateManager gameStateManager;
+    private final ResultManager resultManager;
 
     private Results resultsPanel;
     
@@ -51,36 +52,17 @@ public class Game implements ActionListener {
         
         JPanel p = new JPanel(new GridBagLayout());
         
-        JLabel songListLabel = new JLabel("Select song");
-        GridBagConstraints songListLabelC = new GridBagConstraints();
-        songListLabelC.fill = GridBagConstraints.HORIZONTAL;
-        songListLabelC.gridx = 0;
-        songListLabelC.gridy = 0;
-        songListLabelC.insets = new Insets(20,20,20,50);
-        
-        p.add(songListLabel, songListLabelC);
-        
-        JLabel maxClapsFieldLabel = new JLabel("Number of claps");
-        GridBagConstraints maxClapsFieldLabelC = new GridBagConstraints();
-        maxClapsFieldLabelC.fill = GridBagConstraints.HORIZONTAL;
-        maxClapsFieldLabelC.gridx = 0;
-        maxClapsFieldLabelC.gridy = 2;
-        maxClapsFieldLabelC.insets = new Insets(0,20,20,50);
-        
-        p.add(maxClapsFieldLabel, maxClapsFieldLabelC);
-        
-        JLabel easyModeBoxLabel = new JLabel("Easy mode");
-        GridBagConstraints easyModeBoxLabelC = new GridBagConstraints();
-        easyModeBoxLabelC.fill = GridBagConstraints.HORIZONTAL;
-        easyModeBoxLabelC.gridx = 0;
-        easyModeBoxLabelC.gridy = 3;
-        easyModeBoxLabelC.insets = new Insets(0,20,20,50);
-        
-        p.add(easyModeBoxLabel, easyModeBoxLabelC);
+        this.setupLabels(p);
         
         songList = new JComboBox();
         for (int i = 0; i < this.levelManager.getAllLevels().size(); i++) {
-            String level = this.levelManager.getAllLevels().get(i).song.displayName + " (" + this.levelManager.getAllLevels().get(i).song.BPM +" BPM)";
+            String level;
+            if(i == 0) {
+                level = this.levelManager.getAllLevels().get(i).song.displayName;
+            }
+            else {
+                level = this.levelManager.getAllLevels().get(i).song.displayName + " (" + this.levelManager.getAllLevels().get(i).song.BPM +" BPM)";
+            }
             songList.addItem(level);
         }
         songList.setSelectedIndex(0);
@@ -102,6 +84,15 @@ public class Game implements ActionListener {
         playButtonC.insets = new Insets(20,0,20,20);
         
         p.add(playButton, playButtonC);
+        
+        JTextField BPMField = new JTextField();
+        GridBagConstraints BPMFieldC = new GridBagConstraints();
+        BPMFieldC.fill = GridBagConstraints.HORIZONTAL;
+        BPMFieldC.gridx = 1;
+        BPMFieldC.gridy = 1;
+        BPMFieldC.insets = new Insets(0,0,20,20);
+        
+        p.add(BPMField, BPMFieldC);
         
         JTextField maxClapsField = new JTextField("" + this.gameStateManager.getMasterClaps());
         GridBagConstraints maxClapsFieldC = new GridBagConstraints();
@@ -125,13 +116,15 @@ public class Game implements ActionListener {
             frame, p, "Setup", JOptionPane.PLAIN_MESSAGE
         );
         
-        /*try {
-            masterBPM = Integer.parseInt(masterBPMField.getText());   
+        if (!BPMField.getText().isEmpty()) {
+            try {
+                this.levelManager.getAllLevels().get(0).song.BPM = Integer.parseInt(BPMField.getText());
+            }
+            catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "BPM invalid. Please try again!");
+                this.showSetup(frame);
+            }
         }
-        catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "BPM invalid. Please try again!");
-            this.askUserForSetup(frame);
-        }*/
         
         try {
             this.gameStateManager.setMasterClaps(Integer.parseInt(maxClapsField.getText()));
@@ -149,6 +142,44 @@ public class Game implements ActionListener {
         }
         
         }
+    
+    private void setupLabels (JPanel p) {
+        JLabel songListLabel = new JLabel("Select song");
+        GridBagConstraints songListLabelC = new GridBagConstraints();
+        songListLabelC.fill = GridBagConstraints.HORIZONTAL;
+        songListLabelC.gridx = 0;
+        songListLabelC.gridy = 0;
+        songListLabelC.insets = new Insets(20,20,20,50);
+        
+        p.add(songListLabel, songListLabelC);
+        
+        JLabel BPMlabel = new JLabel("OR enter a custom BPM");
+        GridBagConstraints BPMlabelC = new GridBagConstraints();
+        BPMlabelC.fill = GridBagConstraints.HORIZONTAL;
+        BPMlabelC.gridx = 0;
+        BPMlabelC.gridy = 1;
+        BPMlabelC.insets = new Insets(20,20,20,50);
+        
+        p.add(BPMlabel, BPMlabelC);
+        
+        JLabel maxClapsFieldLabel = new JLabel("Number of claps");
+        GridBagConstraints maxClapsFieldLabelC = new GridBagConstraints();
+        maxClapsFieldLabelC.fill = GridBagConstraints.HORIZONTAL;
+        maxClapsFieldLabelC.gridx = 0;
+        maxClapsFieldLabelC.gridy = 2;
+        maxClapsFieldLabelC.insets = new Insets(0,20,20,50);
+        
+        p.add(maxClapsFieldLabel, maxClapsFieldLabelC);
+        
+        JLabel easyModeBoxLabel = new JLabel("Easy mode");
+        GridBagConstraints easyModeBoxLabelC = new GridBagConstraints();
+        easyModeBoxLabelC.fill = GridBagConstraints.HORIZONTAL;
+        easyModeBoxLabelC.gridx = 0;
+        easyModeBoxLabelC.gridy = 3;
+        easyModeBoxLabelC.insets = new Insets(0,20,20,50);
+        
+        p.add(easyModeBoxLabel, easyModeBoxLabelC);
+    } 
     
     public void showResults () {
         

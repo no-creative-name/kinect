@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Skeleton {
     
-    private Factory factory;
+    private final Factory factory;
     
     private List<Joint> joints;
     private int id;

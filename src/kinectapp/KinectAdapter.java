@@ -9,8 +9,8 @@ import kinectapp.interfaces.KinectManager;
 
 public class KinectAdapter extends J4KSDK{
    
-    private Factory factory;
-    private KinectManager kinectManager;
+    private final Factory factory;
+    private final KinectManager kinectManager;
     
     private double[][][] coordinates;
     private long skeletonDataCounter = 0;

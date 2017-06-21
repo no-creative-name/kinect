@@ -7,7 +7,7 @@ import java.awt.Graphics;
 
 public class GraphicJoint {
     
-    private Factory factory;
+    private final Factory factory;
     
     private Graphics visualization;
     

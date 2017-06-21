@@ -7,8 +7,8 @@ import kinectapp.interfaces.KinectManager;
 
 public class SkeletonService {
    
-    private Factory factory;
-    private KinectManager kinectManager;
+    private final Factory factory;
+    private final KinectManager kinectManager;
     
     private List <Skeleton> skeletons;
     private KinectAdapter kinectAdapter;

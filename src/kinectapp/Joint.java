@@ -4,7 +4,7 @@ package kinectapp;
 
 public class Joint {
     
-    private Factory factory;
+    private final Factory factory;
     
     private int id;
     

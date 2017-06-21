@@ -21,11 +21,11 @@ import kinectapp.interfaces.ResultManager;
 
 public class GraphicsEngine extends JPanel{
     
-    private Factory factory;
-    private LayoutManager layoutManager;
-    private LevelManager levelManager;
-    private GameStateManager gameStateManager;
-    private ResultManager resultManager;
+    private final Factory factory;
+    private final LayoutManager layoutManager;
+    private final LevelManager levelManager;
+    private final GameStateManager gameStateManager;
+    private final ResultManager resultManager;
     
     private SkeletonService skeletonService;
     private List<GraphicSkeleton> graphicSkeletons;

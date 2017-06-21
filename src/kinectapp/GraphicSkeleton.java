@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 
 public class GraphicSkeleton extends JPanel {
     
-    private Factory factory;
+    private final Factory factory;
     
     private List<GraphicJoint> joints;
     private Skeleton skeleton;

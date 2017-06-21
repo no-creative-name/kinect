@@ -6,8 +6,9 @@ import javax.swing.JFrame;
 
 public class KinectApp {
 
-    private Factory factory;
-    private GameStateManager gameStateManager;
+    private final Factory factory;
+    private final GameStateManager gameStateManager;
+    
     private boolean initiated = false;
     private GraphicsEngine graphicsEngine;
     

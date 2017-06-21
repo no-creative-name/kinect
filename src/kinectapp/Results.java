@@ -27,13 +27,13 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 public class Results implements ActionListener{
     
-        Factory factory;
-        ResultManager resultManager;
-        GameStateManager gameStateManager;
-        
-        JFrame resultFrame;
-        JButton playAgainBtn;
-        JButton exitBtn;
+    private final Factory factory;
+    private final ResultManager resultManager;
+    private final GameStateManager gameStateManager;
+     
+    JFrame resultFrame;
+    JButton playAgainBtn;
+    JButton exitBtn;
     
     Results (Factory factory) {
         

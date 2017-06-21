@@ -61,6 +61,8 @@ public class BeatLevelManager implements LevelManager{
             
             this.allLevels.add(new Level(title, fileName, BPM));
         }
+        
+        this.allLevels.add(0, new Level("Custom BPM", "", 120));
     }
     @Override
     public List<Level> getAllLevels () {
