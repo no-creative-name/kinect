@@ -71,7 +71,7 @@ public class Game implements ActionListener {
         songListC.fill = GridBagConstraints.HORIZONTAL;
         songListC.gridx = 1;
         songListC.gridy = 0;
-        songListC.insets = new Insets(20,0,20,20);
+        songListC.insets = new Insets(0,0,0,20);
         
         p.add(songList, songListC);
         
@@ -81,7 +81,7 @@ public class Game implements ActionListener {
         playButtonC.fill = GridBagConstraints.HORIZONTAL;
         playButtonC.gridx = 2;
         playButtonC.gridy = 0;
-        playButtonC.insets = new Insets(20,0,20,20);
+        playButtonC.insets = new Insets(0,0,0,20);
         
         p.add(playButton, playButtonC);
         
@@ -158,7 +158,7 @@ public class Game implements ActionListener {
         BPMlabelC.fill = GridBagConstraints.HORIZONTAL;
         BPMlabelC.gridx = 0;
         BPMlabelC.gridy = 1;
-        BPMlabelC.insets = new Insets(20,20,20,50);
+        BPMlabelC.insets = new Insets(0,20,20,50);
         
         p.add(BPMlabel, BPMlabelC);
         
